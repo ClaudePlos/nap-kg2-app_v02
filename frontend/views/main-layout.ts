@@ -26,7 +26,7 @@ export class MainLayout extends Layout {
         <header class="view-header" slot="navbar">
           <vaadin-drawer-toggle aria-label="Menu toggle" class="view-toggle" theme="contrast"></vaadin-drawer-toggle>
           <h1 class="view-title">${appStore.currentViewTitle}</h1>
-          <a href="/logout" class="ms-auto">Log out</a>
+          <a href="/logout" class="ms-auto">Log out&nbsp;&nbsp;</a>
         </header>
         <section class="drawer-section" slot="drawer">
           <h2 class="app-name">${appStore.applicationName}</h2>

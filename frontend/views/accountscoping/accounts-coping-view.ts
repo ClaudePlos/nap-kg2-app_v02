@@ -15,11 +15,11 @@ import {Notification} from "@vaadin/notification";
 import * as HelloWorldEndpoint from "Frontend/generated/HelloWorldEndpoint";
 
 @customElement('accounts-coping-view')
-export class AboutView extends LitElement  {
+export class AccountCopingView extends LitElement  {
     mask = '';
     year = '';
     level = '';
-    klKodCompany = '';
+    frmIdCompanyCopyTo = '';
 
     @state()
     private comapnies: EatFirma[] = [];
@@ -78,11 +78,11 @@ export class AboutView extends LitElement  {
 
     companyChanged(e: CustomEvent) {
         console.log(e.detail.value as string);
-        this.klKodCompany = e.detail.value as string;
+        this.frmIdCompanyCopyTo = e.detail.value as string;
     }
 
     async copyAccountsToCompany() {
-        const serverResponse = await CompanyEndpoint.copyAccountsToCompany(Number(this.klKodCompany), this.mask, this.year, this.level);
+        const serverResponse = await CompanyEndpoint.copyAccountsToCompany(Number(this.frmIdCompanyCopyTo), this.mask, this.year, this.level);
         Notification.show(serverResponse as string);
     }
 

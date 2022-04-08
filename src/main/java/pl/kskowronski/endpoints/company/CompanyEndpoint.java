@@ -5,6 +5,7 @@ import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
 import pl.kskowronski.data.entities.EatFirma;
 import pl.kskowronski.data.services.EatFirmaRepo;
+import pl.kskowronski.data.services.EgeriaService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,12 @@ import java.util.List;
 @AnonymousAllowed
 public class CompanyEndpoint {
 
-    EatFirmaRepo eatFirmaRepo;
+    private EatFirmaRepo eatFirmaRepo;
+    private EgeriaService egeriaService;
 
-    public CompanyEndpoint(EatFirmaRepo eatFirmaRepo) {
+    public CompanyEndpoint(EatFirmaRepo eatFirmaRepo, EgeriaService egeriaService) {
         this.eatFirmaRepo = eatFirmaRepo;
+        this.egeriaService = egeriaService;
     }
 
     public @Nonnull List<@Nonnull EatFirma> getCompanies() {
@@ -30,11 +33,11 @@ public class CompanyEndpoint {
         return item;
     }
 
-    public String copyAccountsToCompany( Integer klKodCompany, String mask, String year, String level ) {
-        String response = "Skopiowane";
-
-        return response + " do klKod: " + klKodCompany;
+    public String copyAccountsToCompany( Integer frmIdCompanyTo, String mask, String year, String level ) {
+        String ret = egeriaService.copyAccountToAnotherCompany(frmIdCompanyTo, mask, year, level);
+        return ret;
     }
+
 
 
 }

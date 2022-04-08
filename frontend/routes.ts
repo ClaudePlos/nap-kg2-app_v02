@@ -2,6 +2,7 @@ import { Commands, Context, Route, Router  } from '@vaadin/router';
 import './views/helloworld/hello-world-view';
 import './views/main-layout';
 import './views/accountscoping/accounts-coping-view';
+import './views/balance/balance-view';
 
 import { appStore } from './stores/app-store';
 import { autorun } from 'mobx';
@@ -31,6 +32,12 @@ export const views: ViewRoute[] = [
     component: 'accounts-coping-view',
     icon: 'la la-globe',
     title: 'Kopiowanie kont',
+  },
+  {
+    path: 'balance',
+    component: 'balance-view',
+    icon: 'la la-globe',
+    title: 'Obroty i Salda',
   },
   {
     path: 'hello',
