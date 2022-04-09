@@ -19,9 +19,9 @@ public class BalanceEndpoint {
     }
 
 
-    public @Nonnull List<@Nonnull BalanceDTO> calculateBalance( Integer frmId, String dateFrom, String dateTo ) {
+    public @Nonnull List<@Nonnull BalanceDTO> calculateBalance( Integer frmId, String dateFrom, String dateTo, String mask ) {
         egeriaService.setConsolidateCompanyOnCompany(frmId);
-        List<BalanceDTO> ret = egeriaService.calculateBalance(frmId, dateFrom, dateTo);
+        List<BalanceDTO> ret = egeriaService.calculateBalance(frmId, dateFrom, dateTo, mask);
         return ret;
     }
 

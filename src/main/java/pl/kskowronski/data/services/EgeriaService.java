@@ -50,22 +50,22 @@ public class EgeriaService {
 
 
     @Transactional
-    public List<BalanceDTO> calculateBalance(Integer frmId, String dateFrom, String dateTo) {
+    public List<BalanceDTO> calculateBalance(Integer frmId, String dateFrom, String dateTo, String mask) {
         Gson gson = new Gson();
         String sql = "BEGIN kgp_nowe_ois.generuj (\n" +
                 "    2021,\n" +
-                "    '2021-01-01',\n" +
-                "    '2021-01-31',\n" +
-                "    '501%',\n" +
+                "    '" + dateFrom +"',\n" +
+                "    '" + dateTo + "',\n" +
+                "    '" + mask + "',\n" +
                 "    999, --p_knt_max_poziom      IN  NUMBER,\n" +
                 "    'B',\n" +
                 "    1,\n" +
-                "    'N',\n" +
+                "    'T',\n" +
                 "    'N',\n" +
                 "    'N',\n" +
                 "    '0',\n" +
                 "     '999999',\n" +
-                "    '',\n" +
+                "    null,\n" +
                 "    'N',\n" +
                 "     'N',\n" +
                 "    'N',\n" +

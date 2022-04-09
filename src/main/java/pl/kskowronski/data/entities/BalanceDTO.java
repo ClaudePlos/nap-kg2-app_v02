@@ -20,8 +20,8 @@ public class BalanceDTO {
     private BigDecimal  boMaAndWal;
     private BigDecimal  boMaAndCumulativeTurnoverWal;
 
-    private BigDecimal  periodTurnoverWn; //"Obroty okresu WN\",\n" +
-    private BigDecimal  periodTurnoverWnWal; //"Obroty okresu WN wal\",\n" +
+    private BigDecimal  periodTurnoverWn; //"Obroty okresu WN\
+    private BigDecimal  periodTurnoverWnWal; //"Obroty okresu WN wal\"
 
     private BigDecimal  periodTurnoverMa;
     private BigDecimal  periodTurnoverMaWal;
