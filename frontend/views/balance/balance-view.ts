@@ -16,13 +16,21 @@ import EatFirmaModel from 'Frontend/generated/pl/kskowronski/data/entities/EatFi
 import {Notification} from "@vaadin/notification";
 import { GridColumn, GridItemModel } from '@vaadin/grid';
 import BalanceDTO from "Frontend/generated/pl/kskowronski/data/entities/BalanceDTO";
+import { DatePicker, DatePickerDate, DatePickerValueChangedEvent } from '@vaadin/date-picker';
+import dateFnsFormat from 'date-fns/format';
+import dateFnsParse from 'date-fns/parse';
+import '../mycomponents/date-picker-claude';
 
 @customElement('balance-view')
 export class BalanceView extends View  {
     private frmId: string  = '';
     private mask: string = '';
-    private dateFrom: string = '';
-    private dateTo: string = '';
+
+    @state()
+    private dateFrom: string = dateFnsFormat(new Date('2021-01-01'), 'yyyy-MM-dd');
+
+    @state()
+    private dateTo: string = dateFnsFormat(new Date('2021-01-31'), 'yyyy-MM-dd');
 
     @state()
     private companies: EatFirma[] = [];
@@ -30,9 +38,35 @@ export class BalanceView extends View  {
     @state()
     private balance: Array<BalanceDTO | undefined> | undefined = [];
 
+    @query('vaadin-date-picker')
+    private datePicker?: DatePicker;
+
+
+
     async firstUpdated() {
         const companies = await CompanyEndpoint.getCompanies();
         this.companies = companies;
+
+        const formatDateIso8601 = (dateParts: DatePickerDate): string => {
+            const { year, month, day } = dateParts;
+            const date = new Date(year, month, day);
+
+            return dateFnsFormat(date, 'yyyy-MM-dd');
+        };
+
+        const parseDateIso8601 = (inputValue: string): DatePickerDate => {
+            const date = dateFnsParse(inputValue, 'yyyy-MM-dd', new Date());
+
+            return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() };
+        };
+
+        if (this.datePicker) {
+            this.datePicker.i18n = {
+                ...this.datePicker.i18n,
+                formatDate: formatDateIso8601,
+                parseDate: parseDateIso8601,
+            };
+        }
     }
 
     connectedCallback() {
@@ -53,8 +87,8 @@ export class BalanceView extends View  {
                                   helper-text="Wybierz firmę"
                 ></vaadin-combo-box>
                 <vaadin-text-field label="Maska" value="501-Z386%" @value-changed=${this.maskChanged} clear-button-visible></vaadin-text-field>
-                <vaadin-date-picker label="Okres od:" value="2021-01-01" @value-changed="${this.dateFromChanged}"></vaadin-date-picker>
-                <vaadin-date-picker label="Okres do:" value="2021-01-31" @value-changed="${this.dateFromTo}"></vaadin-date-picker>
+                <vaadin-date-picker label="Okres od:" value="${this.dateFrom}" @value-changed="${this.dateFromChanged}"></vaadin-date-picker>
+                <vaadin-date-picker label="Okres do:" value="${this.dateTo}" @value-changed="${this.dateFromTo}"></vaadin-date-picker>
                 <vaadin-button @click=${this.run}>Uruchom</vaadin-button>
             </div>
             
