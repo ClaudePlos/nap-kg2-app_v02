@@ -2,7 +2,11 @@ package pl.kskowronski.endpoints.kg;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
+import dev.hilla.Nonnull;
+import pl.kskowronski.data.entities.BalanceDTO;
 import pl.kskowronski.data.services.EgeriaService;
+
+import java.util.List;
 
 @Endpoint
 @AnonymousAllowed
@@ -15,8 +19,9 @@ public class BalanceEndpoint {
     }
 
 
-    public String calculateBalance( Integer frmIdCompanyTo, String dateFrom, String dateTo ) {
-        String ret = "ok";
+    public @Nonnull List<@Nonnull BalanceDTO> calculateBalance( Integer frmId, String dateFrom, String dateTo ) {
+        egeriaService.setConsolidateCompanyOnCompany(frmId);
+        List<BalanceDTO> ret = egeriaService.calculateBalance(frmId, dateFrom, dateTo);
         return ret;
     }
 

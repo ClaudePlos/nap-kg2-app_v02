@@ -23,7 +23,6 @@ public class CompanyEndpoint {
     }
 
     public @Nonnull List<@Nonnull EatFirma> getCompanies() {
-
         List<EatFirma> companiesList = eatFirmaRepo.findAllForGroup();
         return companiesList;
     }

@@ -24,12 +24,7 @@ public class User {
     @Column(name = "UZ_STANOWISKO")
     private BigDecimal uzStanowisko;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "npp_users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @Transient
     private Set<Role> roles = new HashSet<>();
 
     public BigDecimal getUzId() {

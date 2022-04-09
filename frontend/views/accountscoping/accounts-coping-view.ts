@@ -38,7 +38,7 @@ export class AccountCopingView extends LitElement  {
                                   .items="${this.comapnies}"
                                   @value-changed="${this.companyChanged}"
                                   item-label-path="frmName"
-                                  item-value-path="frmKlId"
+                                  item-value-path="frmId"
                                   allow-custom-value
                                   label="Browser"
                                   helper-text="Wybierz firmę"
