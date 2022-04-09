@@ -26,6 +26,9 @@ public class BalanceDTO {
     private BigDecimal  periodTurnoverMa;
     private BigDecimal  periodTurnoverMaWal;
 
+    private BigDecimal  balanceWn;
+    private BigDecimal  balanceMa;
+
     public String getFrmName() {
         return frmName;
     }
@@ -152,5 +155,21 @@ public class BalanceDTO {
 
     public void setPeriodTurnoverMaWal(BigDecimal periodTurnoverMaWal) {
         this.periodTurnoverMaWal = periodTurnoverMaWal;
+    }
+
+    public BigDecimal getBalanceWn() {
+        return balanceWn;
+    }
+
+    public void setBalanceWn(BigDecimal balanceWn) {
+        this.balanceWn = balanceWn;
+    }
+
+    public BigDecimal getBalanceMa() {
+        return balanceMa;
+    }
+
+    public void setBalanceMa(BigDecimal balanceMa) {
+        this.balanceMa = balanceMa;
     }
 }

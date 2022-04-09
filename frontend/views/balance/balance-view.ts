@@ -7,13 +7,14 @@ import '@vaadin/date-picker';
 import '@vaadin/grid/vaadin-grid';
 import { View } from '../../views/view';
 import { customElement, query, state } from 'lit/decorators.js';
-import {html} from "lit";
+import { guard } from 'lit/directives/guard.js';
+import {html, render} from "lit";
 import * as CompanyEndpoint from "Frontend/generated/CompanyEndpoint";
 import * as BalanceEndpoint from "Frontend/generated/BalanceEndpoint";
 import EatFirma from 'Frontend/generated/pl/kskowronski/data/entities/EatFirma';
 import EatFirmaModel from 'Frontend/generated/pl/kskowronski/data/entities/EatFirmaModel';
 import {Notification} from "@vaadin/notification";
-import { GridItemModel } from '@vaadin/grid';
+import { GridColumn, GridItemModel } from '@vaadin/grid';
 import BalanceDTO from "Frontend/generated/pl/kskowronski/data/entities/BalanceDTO";
 
 @customElement('balance-view')
@@ -36,11 +37,11 @@ export class BalanceView extends View  {
 
     connectedCallback() {
         super.connectedCallback();
-        this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
+        //this.classList.add('flex', 'p-m', 'gap-m', 'items-end','height: 100%');
     }
 
     render() {
-        return html`<div style="width: 100%;">
+        return html`<div style="width: 99%; height: 100%; padding-left: 5px">
             <div>
                 <vaadin-combo-box label="Do firmy"
                                   .items="${this.companies}"
@@ -58,29 +59,62 @@ export class BalanceView extends View  {
             </div>
             
             <vaadin-split-layout>
-            <vaadin-grid .items=${this.balance} style="width: 100%;">
+            <vaadin-grid .items=${this.balance} style="width: 99%; height: 88%">
                 <vaadin-grid-column path="frmName" .renderer="${this.subscriptionRenderer}" auto-width></vaadin-grid-column>
-                <vaadin-grid-column path="account" auto-width></vaadin-grid-column>
-                <vaadin-grid-column path="accountName" auto-width></vaadin-grid-column>
+                <vaadin-grid-column path="account" width="250px"></vaadin-grid-column>
+                <vaadin-grid-column header="Name" .renderer="${this.accountNameRenderer}" auto-width></vaadin-grid-column>
 
-                <vaadin-grid-column path="boWn" header="BoWN" width="7em" flex-grow="0" auto-width></vaadin-grid-column>
-                <vaadin-grid-column path="boMa" header="BoMA" width="7em" flex-grow="0" auto-width></vaadin-grid-column>
+                <vaadin-grid-column header="BoWN" text-align="end" width="150px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.boWn))}</span>`,root );})}"
+                ></vaadin-grid-column>
+                <vaadin-grid-column header="BoMA" text-align="end" width="150px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.boMa))}</span>`,root );})}"
+                ></vaadin-grid-column>
                 
-                <vaadin-grid-column path="boWnAndCumulativeTurnover" header="Bo+obroty nar WN" auto-width></vaadin-grid-column>
-                <vaadin-grid-column path="boMaAndCumulativeTurnover" header="Bo+obroty nar MA" auto-width></vaadin-grid-column>
+                <vaadin-grid-column header="Bo+obroty nar WN" text-align="end" width="200px"
+                   .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                    render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.boWnAndCumulativeTurnover))}</span>`,root );})}"
+                ></vaadin-grid-column>
+                <vaadin-grid-column header="Bo+obroty nar MA" text-align="end" width="200px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.boMaAndCumulativeTurnover))}</span>`,root );})}"
+                ></vaadin-grid-column>
+
+                <!-- TODO obroty WN nar -->
+
+                <vaadin-grid-column header="Obroty okresu WN" text-align="end" width="200px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.periodTurnoverWn))}</span>`,root );})}"
+                ></vaadin-grid-column>
+                <vaadin-grid-column header="Obroty okresu MA" text-align="end" width="200px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.periodTurnoverMa))}</span>`,root );})}"
+                ></vaadin-grid-column>
+
+                <vaadin-grid-column header="Saldo WN" text-align="end" width="150px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.balanceWn))}</span>`,root );})}"
+                ></vaadin-grid-column>
+                <vaadin-grid-column header="Saldo MA" text-align="end" width="150px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.balanceMa))}</span>`,root );})}"
+                ></vaadin-grid-column>
                 
-                <vaadin-grid-column path="boWnAndWal" auto-width></vaadin-grid-column>
-                <vaadin-grid-column path="boWnAndCumulativeTurnoverWal" header="Bo+Obroty nar WN wal" auto-width></vaadin-grid-column>
+                
+                <vaadin-grid-column path="boWnAndWal" width="150px"></vaadin-grid-column>
+                <vaadin-grid-column path="boWnAndCumulativeTurnoverWal" header="Bo+Obroty nar WN wal" width="150px"></vaadin-grid-column>
 
                 
                 
                 <vaadin-grid-column path="boMaAndWal"></vaadin-grid-column>
                 <vaadin-grid-column path="boMaAndCumulativeTurnoverWal"></vaadin-grid-column>
 
-                <vaadin-grid-column path="periodTurnoverWn"></vaadin-grid-column>
+                
                 <vaadin-grid-column path="periodTurnoverWnWal"></vaadin-grid-column>
 
-                <vaadin-grid-column path="periodTurnoverMa"></vaadin-grid-column>
+                
                 <vaadin-grid-column path="periodTurnoverMaWal"></vaadin-grid-column>
                 
             </vaadin-grid>
@@ -110,6 +144,16 @@ export class BalanceView extends View  {
         console.log(serverResponse);
         this.balance = serverResponse;
     }
+
+    formatAmount(num: number) {
+        return Intl.NumberFormat('pl', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(
+            num
+        );
+    }
+
+    private accountNameRenderer = (root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+        render(html` <span title='${model.item.accountName}'>${model.item.accountName}</span>`, root);
+    };
 
     private subscriptionRenderer = (
         root: HTMLElement,

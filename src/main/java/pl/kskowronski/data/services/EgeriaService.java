@@ -60,9 +60,9 @@ public class EgeriaService {
                 "    999, --p_knt_max_poziom      IN  NUMBER,\n" +
                 "    'B',\n" +
                 "    1,\n" +
-                "    'T',\n" +
-                "    'N',\n" +
-                "    'N',\n" +
+                "    'T',\n" + // weryfikacja
+                "    'N',\n" + // pomin 0 saldo
+                "    'T',\n" + // pomin niektywne
                 "    '0',\n" +
                 "     '999999',\n" +
                 "    null,\n" +
@@ -131,6 +131,9 @@ public class EgeriaService {
 
             b.setPeriodTurnoverMa((BigDecimal) item[13]);
             b.setPeriodTurnoverMaWal((BigDecimal) item[14]);
+
+            b.setBalanceWn((BigDecimal) item[19]);
+            b.setBalanceMa((BigDecimal) item[21]);
 
             balanceList.add(b);
         });
