@@ -1,10 +1,9 @@
 package pl.kskowronski.data.services;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kskowronski.data.entities.BalanceDTO;
+import pl.kskowronski.data.entities.EatFirma;
 
 
 import javax.persistence.EntityManager;
@@ -50,8 +49,7 @@ public class EgeriaService {
 
 
     @Transactional
-    public List<BalanceDTO> calculateBalance(Integer frmId, String dateFrom, String dateTo, String mask) {
-        Gson gson = new Gson();
+    public List<BalanceDTO> calculateBalance(String frmName, String dateFrom, String dateTo, String mask) {
         String sql = "BEGIN kgp_nowe_ois.generuj (\n" +
                 "    2021,\n" +
                 "    '" + dateFrom +"',\n" +
@@ -104,14 +102,13 @@ public class EgeriaService {
                         "where knt_id = rap_knt_id\n" +
                         "and wal_id = nvl(rap_wal_id,1)\n" +
                         "order by knt_pelny_numer )";
-        String parseSqlCellName = clearSql(sql2);
-        String[] cellName = parseSqlCellName.split(" ");
+
         List<Object[]> result = em.createNativeQuery(sql2).getResultList();
 
         List<BalanceDTO> balanceList = new ArrayList<>();
         result.forEach( item -> {
             BalanceDTO b = new BalanceDTO();
-            b.setFrmName(frmId + "");
+            b.setFrmName(frmName);
             b.setAccount((String) item[0]);
             b.setAccountName((String) item[1]);
             b.setCurrency((String) item[2]);
@@ -138,61 +135,7 @@ public class EgeriaService {
             balanceList.add(b);
         });
 
-//        JsonArray jsonArray = new Gson().fromJson(gson.toJson(result), JsonArray.class);
-//        JsonArray jsonEnd = new JsonArray();
-//        jsonArray.forEach(item -> {
-//            JsonObject j = new JsonObject();
-//            for (int i=0; i<jsonArray.get(0).getAsJsonArray().size(); i++) {
-//                j.add(cellName[i+1].replace(",",""), item.getAsJsonArray().get(i));
-//            }
-//            jsonEnd.add(j);
-//        });
-
         return balanceList;
-    }
-
-
-    private String clearSql( String sql ) {
-
-        String[] cellName = sql.split(" ");
-        List<String> list = new ArrayList<String>(Arrays.asList(cellName));
-        List<String> list2 = new ArrayList<String>(Arrays.asList(cellName));
-        int j = 0;
-        for ( int i = 0; i < list.size(); i++){
-
-            if (list.get(i).toUpperCase().equals("DISTINCT") ) {
-                list2.remove(i-j);
-                j++;
-            }
-
-            if (list.get(i).toUpperCase().equals("AS") ) {
-                list2.remove(i-j);
-                list2.remove(i-j-1);
-                j++; j++;
-            }
-
-            if (list.get(i).toUpperCase().equals("FROM") ) {
-                break;
-            }
-
-        }
-
-        for ( int i = 0; i < list2.size(); i++){
-
-            if (list2.get(i).contains("\"")) {
-                int index = list2.indexOf(list2.get(i));
-                list2.set( index, list2.get(i).replace("\"","") );
-            }
-
-            if (list2.get(i).toUpperCase().equals("FROM") ) {
-                break;
-            }
-        }
-
-
-
-
-        return String.join( " ",list2.toArray(new String[0]));
     }
 
 }

@@ -60,12 +60,12 @@ export class BalanceView extends View  {
                 <claude-date-from></claude-date-from>
                 <claude-date-to></claude-date-to>
                 <vaadin-button @click=${this.run}>Uruchom</vaadin-button>
-                <vaadin-button @click=${this.excel}>Excel</vaadin-button>
+                <vaadin-button theme="primary success" @click=${this.excel}>Excel</vaadin-button>
             </div>
             
             <vaadin-split-layout>
             <vaadin-grid .items=${this.balance} style="width: 99%; height: 88%">
-                <vaadin-grid-column path="frmName" .renderer="${this.subscriptionRenderer}" auto-width></vaadin-grid-column>
+                <vaadin-grid-column path="frmName" .renderer="${this.frmNameRenderer}" auto-width></vaadin-grid-column>
                 <vaadin-grid-column path="account" width="250px"></vaadin-grid-column>
                 <vaadin-grid-column header="Name" .renderer="${this.accountNameRenderer}" auto-width></vaadin-grid-column>
 
@@ -141,6 +141,13 @@ export class BalanceView extends View  {
         if (this.frmId === "") {
             Notification.show("Brak wybranej firmy !!!")
         }
+
+        if (this.frmId == "0") {
+            const serverResponse = await BalanceEndpoint.calculateBalanceForCompaniesInGK( balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask )
+            this.balance = serverResponse
+            return
+        }
+
         const serverResponse = await BalanceEndpoint.calculateBalance(Number(this.frmId), balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask)
         console.log(serverResponse.length);
         this.balance = serverResponse
@@ -169,12 +176,18 @@ export class BalanceView extends View  {
         render(html` <span title='${model.item.accountName}'>${model.item.accountName}</span>`, root);
     };
 
-    private subscriptionRenderer = ( root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO> ) => {
-        const frmId =  model.item.frmName as number | undefined;
-        let cName = this.companies.find( item => item.frmId == frmId );
-        // @ts-ignore
-        root.textContent = cName.frmName;
+    private frmNameRenderer = (root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+        render(html` <span title='${model.item.frmName}'>${model.item.frmName}</span>`, root);
     };
+
+
+
+    // private subscriptionRenderer = ( root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO> ) => {
+    //     const frmId =  model.item.frmName as number | undefined;
+    //     let cName = this.companies.find( item => item.frmId == frmId );
+    //     // @ts-ignore
+    //     root.textContent = cName.frmName;
+    // };
 
 
 
