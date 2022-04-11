@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
 import '@vaadin/date-picker';
-import { DatePicker, DatePickerDate, DatePickerValueChangedEvent } from '@vaadin/date-picker';
+import { DatePicker, DatePickerDate } from '@vaadin/date-picker';
 import { applyTheme } from 'Frontend/generated/theme';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';

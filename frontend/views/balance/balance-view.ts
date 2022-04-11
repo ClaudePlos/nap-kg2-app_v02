@@ -6,7 +6,7 @@ import '@vaadin/number-field';
 import '@vaadin/date-picker';
 import '@vaadin/grid/vaadin-grid';
 import { View } from '../../views/view';
-import { customElement, query, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { guard } from 'lit/directives/guard.js';
 import {html, render} from "lit";
 import * as CompanyEndpoint from "Frontend/generated/CompanyEndpoint";
@@ -14,9 +14,8 @@ import * as BalanceEndpoint from "Frontend/generated/BalanceEndpoint";
 import EatFirma from 'Frontend/generated/pl/kskowronski/data/entities/EatFirma';
 import EatFirmaModel from 'Frontend/generated/pl/kskowronski/data/entities/EatFirmaModel';
 import {Notification} from "@vaadin/notification";
-import { GridColumn, GridItemModel } from '@vaadin/grid';
+import { GridItemModel } from '@vaadin/grid';
 import BalanceDTO from "Frontend/generated/pl/kskowronski/data/entities/BalanceDTO";
-import { DatePicker, DatePickerDate, DatePickerValueChangedEvent } from '@vaadin/date-picker';
 import './claude-date-from';
 import './claude-date-to';
 import { balanceViewStore } from './balance-view-store';
@@ -143,7 +142,7 @@ export class BalanceView extends View  {
             Notification.show("Brak wybranej firmy !!!")
         }
         const serverResponse = await BalanceEndpoint.calculateBalance(Number(this.frmId), balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask)
-        //console.log(serverResponse);
+        console.log(serverResponse.length);
         this.balance = serverResponse
     }
 
@@ -170,18 +169,11 @@ export class BalanceView extends View  {
         render(html` <span title='${model.item.accountName}'>${model.item.accountName}</span>`, root);
     };
 
-    private subscriptionRenderer = (
-        root: HTMLElement,
-        _: HTMLElement,
-        model: GridItemModel<BalanceDTO>
-    ) => {
-        let cName = '';
-        if (model.item.frmName === '300000') {
-            cName = 'IZAN+';
-        } else {
-            cName = 'others';
-        }
-        root.textContent = cName;
+    private subscriptionRenderer = ( root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO> ) => {
+        const frmId =  model.item.frmName as number | undefined;
+        let cName = this.companies.find( item => item.frmId == frmId );
+        // @ts-ignore
+        root.textContent = cName.frmName;
     };
 
 
