@@ -5,10 +5,11 @@ import { DatePicker, DatePickerDate, DatePickerValueChangedEvent } from '@vaadin
 import { applyTheme } from 'Frontend/generated/theme';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
+import { balanceViewStore } from './balance-view-store';
 
 
-@customElement('date-picker-claude')
-export class DatePickerClaude extends LitElement {
+@customElement('claude-date-from')
+export class ClaudeDateFrom extends LitElement {
     protected createRenderRoot() {
         const root = super.createRenderRoot();
         // Apply custom theme (only supported if your app uses one)
@@ -49,10 +50,16 @@ export class DatePickerClaude extends LitElement {
     render() {
         return html`
       <vaadin-date-picker
-        label="Select a date:"
+        label="Okres od:"
+        value="${balanceViewStore.dateFrom}"
+        @value-changed="${this.dateChanged}"
       ></vaadin-date-picker>
     `;
     }
+
+    dateChanged( e: CustomEvent ) {
+        balanceViewStore.dateFromChanged(e.detail.value as string);
+    }
 }
 
-export default DatePickerClaude;
+export default ClaudeDateFrom;

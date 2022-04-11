@@ -19,7 +19,9 @@ import BalanceDTO from "Frontend/generated/pl/kskowronski/data/entities/BalanceD
 import { DatePicker, DatePickerDate, DatePickerValueChangedEvent } from '@vaadin/date-picker';
 import dateFnsFormat from 'date-fns/format';
 import dateFnsParse from 'date-fns/parse';
-import '../mycomponents/date-picker-claude';
+import './claude-date-from';
+import './claude-date-to';
+import { balanceViewStore } from './balance-view-store';
 
 @customElement('balance-view')
 export class BalanceView extends View  {
@@ -87,8 +89,8 @@ export class BalanceView extends View  {
                                   helper-text="Wybierz firmę"
                 ></vaadin-combo-box>
                 <vaadin-text-field label="Maska" value="501-Z386%" @value-changed=${this.maskChanged} clear-button-visible></vaadin-text-field>
-                <vaadin-date-picker label="Okres od:" value="${this.dateFrom}" @value-changed="${this.dateFromChanged}"></vaadin-date-picker>
-                <vaadin-date-picker label="Okres do:" value="${this.dateTo}" @value-changed="${this.dateFromTo}"></vaadin-date-picker>
+                <claude-date-from></claude-date-from>
+                <claude-date-to></claude-date-to>
                 <vaadin-button @click=${this.run}>Uruchom</vaadin-button>
             </div>
             
@@ -169,14 +171,17 @@ export class BalanceView extends View  {
         this.dateFrom = e.detail.value as string;
     }
 
-    dateFromTo(e: CustomEvent) {
+    dateToChanged(e: CustomEvent) {
         this.dateTo = e.detail.value as string;
     }
 
     async run() {
-        const serverResponse = await BalanceEndpoint.calculateBalance(Number(this.frmId), this.dateFrom, this.dateTo, this.mask);
-        console.log(serverResponse);
-        this.balance = serverResponse;
+        if (this.frmId === "") {
+            Notification.show("Brak wybranej firmy !!!")
+        }
+        const serverResponse = await BalanceEndpoint.calculateBalance(Number(this.frmId), balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask)
+        //console.log(serverResponse);
+        this.balance = serverResponse
     }
 
     formatAmount(num: number) {
