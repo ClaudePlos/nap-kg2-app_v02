@@ -17,11 +17,13 @@ import {Notification} from "@vaadin/notification";
 import { GridColumn, GridItemModel } from '@vaadin/grid';
 import BalanceDTO from "Frontend/generated/pl/kskowronski/data/entities/BalanceDTO";
 import { DatePicker, DatePickerDate, DatePickerValueChangedEvent } from '@vaadin/date-picker';
-import dateFnsFormat from 'date-fns/format';
-import dateFnsParse from 'date-fns/parse';
 import './claude-date-from';
 import './claude-date-to';
 import { balanceViewStore } from './balance-view-store';
+import * as XLSX from 'xlsx';
+
+const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx';
 
 @customElement('balance-view')
 export class BalanceView extends View  {
@@ -62,6 +64,7 @@ export class BalanceView extends View  {
                 <claude-date-from></claude-date-from>
                 <claude-date-to></claude-date-to>
                 <vaadin-button @click=${this.run}>Uruchom</vaadin-button>
+                <vaadin-button @click=${this.excel}>Excel</vaadin-button>
             </div>
             
             <vaadin-split-layout>
@@ -146,6 +149,23 @@ export class BalanceView extends View  {
         //console.log(serverResponse);
         this.balance = serverResponse
     }
+
+    async excel() {
+
+        const readyToExport = [
+            {id: 1, name: 'a'},
+            {id: 2, name: 'b'},
+            {id: 3, name: 'c'}
+        ];
+
+        const workBook = XLSX.utils.book_new(); // create a new blank book
+        const workSheet = XLSX.utils.json_to_sheet(readyToExport);
+
+        XLSX.utils.book_append_sheet(workBook, workSheet, 'data'); // add the worksheet to the book
+        XLSX.writeFile(workBook, 'temp.xlsx'); // initiate a file download in browser
+
+    }
+
 
     formatAmount(num: number) {
         return Intl.NumberFormat('pl', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(
