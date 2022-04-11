@@ -22,9 +22,6 @@ import './claude-date-to';
 import { balanceViewStore } from './balance-view-store';
 import * as XLSX from 'xlsx';
 
-const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-const EXCEL_EXTENSION = '.xlsx';
-
 @customElement('balance-view')
 export class BalanceView extends View  {
     private frmId: string  = '';
@@ -35,7 +32,7 @@ export class BalanceView extends View  {
     private companies: EatFirma[] = [];
 
     @state()
-    private balance: Array<BalanceDTO | undefined> | undefined = [];
+    private balance: BalanceDTO[] = [];
 
 
     async firstUpdated() {
@@ -152,17 +149,13 @@ export class BalanceView extends View  {
 
     async excel() {
 
-        const readyToExport = [
-            {id: 1, name: 'a'},
-            {id: 2, name: 'b'},
-            {id: 3, name: 'c'}
-        ];
+        const readyToExport = this.balance;
 
         const workBook = XLSX.utils.book_new(); // create a new blank book
         const workSheet = XLSX.utils.json_to_sheet(readyToExport);
 
         XLSX.utils.book_append_sheet(workBook, workSheet, 'data'); // add the worksheet to the book
-        XLSX.writeFile(workBook, 'temp.xlsx'); // initiate a file download in browser
+        XLSX.writeFile(workBook, 'bilans.xlsx'); // initiate a file download in browser
 
     }
 

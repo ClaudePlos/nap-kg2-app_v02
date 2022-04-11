@@ -50,6 +50,6 @@ source directory, contains the server-side Java views</td></tr>
 <pre>
 others npm packages:
 npm install date-fns --save
-npm install xlsx
+npm install xlsx [https://sheetjs.com/]
 </pre>
 
