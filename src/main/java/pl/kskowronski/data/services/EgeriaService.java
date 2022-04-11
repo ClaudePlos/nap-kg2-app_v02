@@ -96,7 +96,6 @@ public class EgeriaService {
                         "RAP_SALDO_WN_WAL \"Saldo WN wal\",\n" +
                         "RAP_SALDO_MA \"Saldo MA\",\n" +
                         "RAP_SALDO_MA_WAL \"Saldo MA wal\",\n" +
-                        "nvl(RAP_SALDO_WN, 0) - nvl(RAP_SALDO_MA, 0) \"Persaldo\",\n" +
                         "nvl(RAP_SALDO_WN_WAL, 0) - nvl(RAP_SALDO_MA_WAL, 0) \"Persaldo wal\"\n" +
                         "from kgtt_rap46, kg_konta, css_waluty\n" +
                         "where knt_id = rap_knt_id\n" +
@@ -131,6 +130,8 @@ public class EgeriaService {
 
             b.setBalanceWn((BigDecimal) item[19]);
             b.setBalanceMa((BigDecimal) item[21]);
+
+            b.setPerBalance( ((BigDecimal) item[19]).subtract((BigDecimal) item[21]) );
 
             balanceList.add(b);
         });

@@ -106,6 +106,11 @@ export class BalanceView extends View  {
                                     .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
                                         render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.balanceMa))}</span>`,root );})}"
                 ></vaadin-grid-column>
+
+                <vaadin-grid-column header="Persaldo" text-align="end" width="150px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.perBalance))}</span>`,root );})}"
+                ></vaadin-grid-column>
                 
                 
                 <vaadin-grid-column path="boWnAndWal" width="150px"></vaadin-grid-column>

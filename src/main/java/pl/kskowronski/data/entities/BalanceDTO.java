@@ -29,6 +29,8 @@ public class BalanceDTO {
     private BigDecimal  balanceWn;
     private BigDecimal  balanceMa;
 
+    private BigDecimal  perBalance;
+
     public String getFrmName() {
         return frmName;
     }
@@ -171,5 +173,13 @@ public class BalanceDTO {
 
     public void setBalanceMa(BigDecimal balanceMa) {
         this.balanceMa = balanceMa;
+    }
+
+    public BigDecimal getPerBalance() {
+        return perBalance;
+    }
+
+    public void setPerBalance(BigDecimal perBalance) {
+        this.perBalance = perBalance;
     }
 }
