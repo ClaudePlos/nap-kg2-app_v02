@@ -4,8 +4,8 @@ import {makeAutoObservable} from "mobx";
 
 class BalanceViewStore {
 
-    public dateFrom: string = dateFnsFormat(new Date('2021-01-31'), 'yyyy-MM-dd');
-    public dateTo: string = dateFnsFormat(new Date('2021-01-31'), 'yyyy-MM-dd');
+    public dateFrom: string = dateFnsFormat(new Date('2022-01-01'), 'yyyy-MM-dd');
+    public dateTo: string = dateFnsFormat(new Date('2022-01-31'), 'yyyy-MM-dd');
 
     constructor() {
         makeAutoObservable(this);

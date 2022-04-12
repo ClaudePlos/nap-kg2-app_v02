@@ -51,5 +51,10 @@ source directory, contains the server-side Java views</td></tr>
 others npm packages:
 npm install date-fns --save
 npm install xlsx [https://sheetjs.com/]
+
+Docker:
+sudo docker build -t nap-kg-app .
+sudo docker run -p 8081:8080 nap-kg-app:latest
+
 </pre>
 

@@ -56,13 +56,12 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        super.configure(http);
-//        setLoginView(http, "/login");
+          //super.configure(http);
+         // setLoginView(http, "/login");
 
         // Public access
         http.authorizeRequests().antMatchers(applyUrlMapping("/login")).permitAll();
-        http.authorizeRequests().antMatchers(applyUrlMapping("/form"))
-                .permitAll();
+        http.authorizeRequests().antMatchers(applyUrlMapping("/form")).permitAll();
         // Admin only access
         http.authorizeRequests().antMatchers("/admin-only/**")
                 .hasAnyRole(ROLE_ADMIN);
@@ -94,6 +93,7 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth)

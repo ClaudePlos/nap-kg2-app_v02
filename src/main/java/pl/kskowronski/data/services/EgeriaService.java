@@ -51,9 +51,9 @@ public class EgeriaService {
     @Transactional
     public List<BalanceDTO> calculateBalance(String frmName, String dateFrom, String dateTo, String mask) {
         String sql = "BEGIN kgp_nowe_ois.generuj (\n" +
-                "    2021,\n" +
-                "    '" + dateFrom +"',\n" +
-                "    '" + dateTo + "',\n" +
+                "    " +  dateFrom.substring(0,4) +",\n" +
+                "    to_date('" + dateFrom +"','YYYY-MM-DD'),\n" +
+                "    to_date('" + dateTo + "','YYYY-MM-DD'),\n" +
                 "    '" + mask + "',\n" +
                 "    999, --p_knt_max_poziom      IN  NUMBER,\n" +
                 "    'B',\n" +
@@ -69,6 +69,7 @@ public class EgeriaService {
                 "    'N',\n" +
                 "    'N'\n" +
                 "  ); END;";
+       // System.out.println(sql);
         this.em.createNativeQuery(sql).executeUpdate();
 
         String sql2 =
@@ -101,7 +102,7 @@ public class EgeriaService {
                         "where knt_id = rap_knt_id\n" +
                         "and wal_id = nvl(rap_wal_id,1)\n" +
                         "order by knt_pelny_numer )";
-
+        //System.out.println(sql2);
         List<Object[]> result = em.createNativeQuery(sql2).getResultList();
 
         List<BalanceDTO> balanceList = new ArrayList<>();
