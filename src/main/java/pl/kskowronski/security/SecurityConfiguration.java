@@ -57,14 +57,6 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
         };
     }
 
-    private final class FailingMatcher implements RequestMatcher {
-        @Override
-        public boolean matches(HttpServletRequest request) {
-            //System.out.println("Request to " + ServletRequestPathUtils.parseAndCache(request));
-            return true;
-        }
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
           //super.configure(http);
@@ -80,8 +72,6 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
         super.configure(http);
         setLoginView(http, "/login");
         http.logout().logoutUrl(applyUrlMapping("/logout"));
-
-        http.requestMatcher(new FailingMatcher());
 
         if (stateless) {
             setStatelessAuthentication(http,
