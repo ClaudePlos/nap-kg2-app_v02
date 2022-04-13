@@ -3,19 +3,25 @@ import {makeAutoObservable} from "mobx";
 
 class TransactionsViewStore {
 
-    dialogOpened = false;
-    account = '';
+    dialogOpened = false
+    account = ''
+    dateFrom = ''
+    dataTo = ''
+    company = ''
 
     constructor() {
-        makeAutoObservable(this);
+        makeAutoObservable(this)
     }
 
-    setOpenedChanged(newValue: boolean, account: string) {
-        this.dialogOpened = newValue;
-        this.account = account;
+    setOpenedChanged(newValue: boolean, account: string, dateFrom: string, dataTo: string, company: string) {
+        this.dialogOpened = newValue
+        this.account = account
+        this.dateFrom = dateFrom
+        this.dataTo = dataTo
+        this.company = company
     }
 
 
 }
 
-export const transactionsViewStore = new TransactionsViewStore();
+export const transactionsViewStore = new TransactionsViewStore()

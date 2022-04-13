@@ -170,18 +170,6 @@ export class BalanceView extends View  {
                 <vaadin-grid-column header="Waluta" path="currency" auto-width></vaadin-grid-column>
                 
                 
-<!--                <vaadin-grid-column path="boWnAndWal" width="150px"></vaadin-grid-column>-->
-<!--                <vaadin-grid-column path="boWnAndCumulativeTurnoverWal" header="Bo+Obroty nar WN wal" width="150px"></vaadin-grid-column>-->
-
-<!--                -->
-<!--                -->
-<!--                <vaadin-grid-column path="boMaAndWal"></vaadin-grid-column>-->
-<!--                <vaadin-grid-column path="boMaAndCumulativeTurnoverWal"></vaadin-grid-column>-->
-
-<!--                -->
-<!--                <vaadin-grid-column path="periodTurnoverWnWal"></vaadin-grid-column>-->
-<!--                <vaadin-grid-column path="periodTurnoverMaWal"></vaadin-grid-column>-->
-                
             </vaadin-grid>
             </vaadin-split-layout>
             <transactions-view></transactions-view>
@@ -267,7 +255,12 @@ export class BalanceView extends View  {
 
     openTransaction() {
         this.selectedItems.forEach( item => {
-            transactionsViewStore.setOpenedChanged(true, item.account as string);
+            transactionsViewStore.setOpenedChanged(true
+                , item.account as string
+                , balanceViewStore.dateFrom
+                , balanceViewStore.dateTo
+                , this.frmId
+            )
         })
 
     }
