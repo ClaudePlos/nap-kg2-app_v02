@@ -39,12 +39,12 @@ export const views: ViewRoute[] = [
     icon: 'la la-globe',
     title: 'Obroty i Salda',
   },
-  {
-    path: 'hello',
-    component: 'hello-world-view',
-    icon: 'la la-globe',
-    title: 'Hello World',
-  },
+  // {
+  //   path: 'hello',
+  //   component: 'hello-world-view',
+  //   icon: 'la la-globe',
+  //   title: 'Hello World',
+  // },
   {
     path: 'about',
     component: 'about-view',

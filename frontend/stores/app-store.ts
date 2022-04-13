@@ -3,7 +3,7 @@ import { makeAutoObservable } from 'mobx';
 import {login as serverLogin, logout as serverLogout} from "@hilla/frontend";
 
 export class AppStore {
-  applicationName = 'nap-kg2-app';
+  applicationName = 'nap-kg-app';
 
   // The location, relative to the base path, e.g. "hello" when viewing "/hello"
   location = '';
