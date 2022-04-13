@@ -89,15 +89,10 @@ public class EgeriaService {
                         "RAP_OBR_WN_WAL \"Obroty okresu WN wal\",\n" +
                         "RAP_OBR_MA \"Obroty okresu MA\", \n" +
                         "RAP_OBR_MA_WAL \"Obroty okresu MA wal\",\n" +
-                        "nvl(RAP_OBR_N_WN, 0) - nvl(RAP_BO_WN, 0) \"Obroty WN nar\",\n" +
-                        "nvl(RAP_OBR_N_WN_WAL, 0) - nvl(RAP_BO_WN_WAL, 0) \"Obroty WN nar wal\", \n" +
-                        "nvl(RAP_OBR_N_MA, 0) - nvl(RAP_BO_MA, 0) \"Obroty MA nar\",\n" +
-                        "nvl(RAP_OBR_N_MA_WAL, 0) - nvl(RAP_BO_MA_WAL, 0) \"Obroty MA nar wal\",\n" +
                         "RAP_SALDO_WN \"Saldo WN\",\n" +
                         "RAP_SALDO_WN_WAL \"Saldo WN wal\",\n" +
                         "RAP_SALDO_MA \"Saldo MA\",\n" +
-                        "RAP_SALDO_MA_WAL \"Saldo MA wal\",\n" +
-                        "nvl(RAP_SALDO_WN_WAL, 0) - nvl(RAP_SALDO_MA_WAL, 0) \"Persaldo wal\"\n" +
+                        "RAP_SALDO_MA_WAL \"Saldo MA wal\" \n" +
                         "from kgtt_rap46, kg_konta, css_waluty\n" +
                         "where knt_id = rap_knt_id\n" +
                         "and wal_id = nvl(rap_wal_id,1)\n" +
@@ -111,28 +106,44 @@ public class EgeriaService {
             b.setFrmName(frmName);
             b.setAccount((String) item[0]);
             b.setAccountName((String) item[1]);
-            b.setCurrency((String) item[2]);
 
             b.setBoWn((BigDecimal) item[3]);
-            b.setBoWnAndCumulativeTurnover((BigDecimal) item[4]);
-            b.setBoWnAndWal((BigDecimal) item[5]);
-            b.setBoWnAndCumulativeTurnoverWal((BigDecimal) item[6]);
-
             b.setBoMa((BigDecimal) item[7]);
-            b.setBoMaAndCumulativeTurnover((BigDecimal) item[8]);
-            b.setBoMaAndWal((BigDecimal) item[9]);
-            b.setBoMaAndCumulativeTurnoverWal((BigDecimal) item[10]);
 
-            b.setPeriodTurnoverWn((BigDecimal) item[11]);
-            b.setPeriodTurnoverWnWal((BigDecimal) item[12]);
+            b.setBoWnPlusObrotyNar((BigDecimal) item[4]);
+            b.setBoMaPlusObrotyNar((BigDecimal) item[8]);
 
-            b.setPeriodTurnoverMa((BigDecimal) item[13]);
-            b.setPeriodTurnoverMaWal((BigDecimal) item[14]);
+            b.setObrotyWnNar(((BigDecimal) item[4]).subtract((BigDecimal) item[3]));
+            b.setObrotyMaNar(((BigDecimal) item[8]).subtract((BigDecimal) item[7]));
 
-            b.setBalanceWn((BigDecimal) item[19]);
-            b.setBalanceMa((BigDecimal) item[21]);
+            b.setObrotyOkresuWn((BigDecimal) item[11]);
+            b.setObrotyOkresuMa((BigDecimal) item[13]);
 
-            b.setPerBalance( ((BigDecimal) item[19]).subtract((BigDecimal) item[21]) );
+            b.setSaldoWn((BigDecimal) item[15]);
+            b.setSaldoMa((BigDecimal) item[17]);
+
+            b.setPersaldo( ((BigDecimal) item[15]).subtract((BigDecimal) item[17]) );
+
+            b.setCurrency((String) item[2]);
+
+
+
+//            b.setBoWnAndWal((BigDecimal) item[5]);
+//            b.setBoWnAndCumulativeTurnoverWal((BigDecimal) item[6]);
+//
+//
+//
+//            b.setBoMaAndWal((BigDecimal) item[9]);
+//            b.setBoMaAndCumulativeTurnoverWal((BigDecimal) item[10]);
+//
+//
+//
+//            b.setPeriodTurnoverWnWal((BigDecimal) item[12]);
+//
+//
+//            b.setPeriodTurnoverMaWal((BigDecimal) item[14]);
+
+
 
             balanceList.add(b);
         });

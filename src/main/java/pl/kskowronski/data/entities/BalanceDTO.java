@@ -8,28 +8,45 @@ public class BalanceDTO {
     private String  frmName;
     private String  account;
     private String  accountName;
-    private String  currency;
+
 
     private BigDecimal  boWn;
-    private BigDecimal  boWnAndCumulativeTurnover; // BO+Obroty nar WN
+    private BigDecimal  boMa;
+
+    private BigDecimal  boWnPlusObrotyNar; // BO+Obroty nar WN
+    private BigDecimal  boMaPlusObrotyNar;
+
+    private BigDecimal obrotyWnNar; //Obroty WN nar
+    private BigDecimal obrotyMaNar;
+
+    private BigDecimal  obrotyOkresuWn; //"Obroty okresu WN\
+    private BigDecimal  obrotyOkresuMa;
+
+
+
+
     private BigDecimal  boWnAndWal; // BO WN wal
     private BigDecimal  boWnAndCumulativeTurnoverWal; // BO+Obroty nar WN Wal
 
-    private BigDecimal  boMa;
-    private BigDecimal  boMaAndCumulativeTurnover;
+    private BigDecimal  saldoWn;
+    private BigDecimal  saldoMa;
+
+    private BigDecimal  persaldo;
+
+    private String  currency;
+
+
     private BigDecimal  boMaAndWal;
     private BigDecimal  boMaAndCumulativeTurnoverWal;
 
-    private BigDecimal  periodTurnoverWn; //"Obroty okresu WN\
+
     private BigDecimal  periodTurnoverWnWal; //"Obroty okresu WN wal\"
 
-    private BigDecimal  periodTurnoverMa;
+
     private BigDecimal  periodTurnoverMaWal;
 
-    private BigDecimal  balanceWn;
-    private BigDecimal  balanceMa;
 
-    private BigDecimal  perBalance;
+
 
     public String getFrmName() {
         return frmName;
@@ -71,30 +88,6 @@ public class BalanceDTO {
         this.boWn = boWn;
     }
 
-    public BigDecimal getBoWnAndCumulativeTurnover() {
-        return boWnAndCumulativeTurnover;
-    }
-
-    public void setBoWnAndCumulativeTurnover(BigDecimal boWnAndCumulativeTurnover) {
-        this.boWnAndCumulativeTurnover = boWnAndCumulativeTurnover;
-    }
-
-    public BigDecimal getBoWnAndWal() {
-        return boWnAndWal;
-    }
-
-    public void setBoWnAndWal(BigDecimal boWnAndWal) {
-        this.boWnAndWal = boWnAndWal;
-    }
-
-    public BigDecimal getBoWnAndCumulativeTurnoverWal() {
-        return boWnAndCumulativeTurnoverWal;
-    }
-
-    public void setBoWnAndCumulativeTurnoverWal(BigDecimal boWnAndCumulativeTurnoverWal) {
-        this.boWnAndCumulativeTurnoverWal = boWnAndCumulativeTurnoverWal;
-    }
-
     public BigDecimal getBoMa() {
         return boMa;
     }
@@ -103,83 +96,75 @@ public class BalanceDTO {
         this.boMa = boMa;
     }
 
-    public BigDecimal getBoMaAndCumulativeTurnover() {
-        return boMaAndCumulativeTurnover;
+    public BigDecimal getBoWnPlusObrotyNar() {
+        return boWnPlusObrotyNar;
     }
 
-    public void setBoMaAndCumulativeTurnover(BigDecimal boMaAndCumulativeTurnover) {
-        this.boMaAndCumulativeTurnover = boMaAndCumulativeTurnover;
+    public void setBoWnPlusObrotyNar(BigDecimal boWnPlusObrotyNar) {
+        this.boWnPlusObrotyNar = boWnPlusObrotyNar;
     }
 
-    public BigDecimal getBoMaAndWal() {
-        return boMaAndWal;
+    public BigDecimal getBoMaPlusObrotyNar() {
+        return boMaPlusObrotyNar;
     }
 
-    public void setBoMaAndWal(BigDecimal boMaAndWal) {
-        this.boMaAndWal = boMaAndWal;
+    public void setBoMaPlusObrotyNar(BigDecimal boMaPlusObrotyNar) {
+        this.boMaPlusObrotyNar = boMaPlusObrotyNar;
     }
 
-    public BigDecimal getBoMaAndCumulativeTurnoverWal() {
-        return boMaAndCumulativeTurnoverWal;
+    public BigDecimal getObrotyWnNar() {
+        return obrotyWnNar;
     }
 
-    public void setBoMaAndCumulativeTurnoverWal(BigDecimal boMaAndCumulativeTurnoverWal) {
-        this.boMaAndCumulativeTurnoverWal = boMaAndCumulativeTurnoverWal;
+    public void setObrotyWnNar(BigDecimal obrotyWnNar) {
+        this.obrotyWnNar = obrotyWnNar;
     }
 
-    public BigDecimal getPeriodTurnoverWn() {
-        return periodTurnoverWn;
+    public BigDecimal getObrotyMaNar() {
+        return obrotyMaNar;
     }
 
-    public void setPeriodTurnoverWn(BigDecimal periodTurnoverWn) {
-        this.periodTurnoverWn = periodTurnoverWn;
+    public void setObrotyMaNar(BigDecimal obrotyMaNar) {
+        this.obrotyMaNar = obrotyMaNar;
     }
 
-    public BigDecimal getPeriodTurnoverWnWal() {
-        return periodTurnoverWnWal;
+    public BigDecimal getObrotyOkresuWn() {
+        return obrotyOkresuWn;
     }
 
-    public void setPeriodTurnoverWnWal(BigDecimal periodTurnoverWnWal) {
-        this.periodTurnoverWnWal = periodTurnoverWnWal;
+    public void setObrotyOkresuWn(BigDecimal obrotyOkresuWn) {
+        this.obrotyOkresuWn = obrotyOkresuWn;
     }
 
-    public BigDecimal getPeriodTurnoverMa() {
-        return periodTurnoverMa;
+    public BigDecimal getObrotyOkresuMa() {
+        return obrotyOkresuMa;
     }
 
-    public void setPeriodTurnoverMa(BigDecimal periodTurnoverMa) {
-        this.periodTurnoverMa = periodTurnoverMa;
+    public void setObrotyOkresuMa(BigDecimal obrotyOkresuMa) {
+        this.obrotyOkresuMa = obrotyOkresuMa;
     }
 
-    public BigDecimal getPeriodTurnoverMaWal() {
-        return periodTurnoverMaWal;
+    public BigDecimal getSaldoWn() {
+        return saldoWn;
     }
 
-    public void setPeriodTurnoverMaWal(BigDecimal periodTurnoverMaWal) {
-        this.periodTurnoverMaWal = periodTurnoverMaWal;
+    public void setSaldoWn(BigDecimal saldoWn) {
+        this.saldoWn = saldoWn;
     }
 
-    public BigDecimal getBalanceWn() {
-        return balanceWn;
+    public BigDecimal getSaldoMa() {
+        return saldoMa;
     }
 
-    public void setBalanceWn(BigDecimal balanceWn) {
-        this.balanceWn = balanceWn;
+    public void setSaldoMa(BigDecimal saldoMa) {
+        this.saldoMa = saldoMa;
     }
 
-    public BigDecimal getBalanceMa() {
-        return balanceMa;
+    public BigDecimal getPersaldo() {
+        return persaldo;
     }
 
-    public void setBalanceMa(BigDecimal balanceMa) {
-        this.balanceMa = balanceMa;
-    }
-
-    public BigDecimal getPerBalance() {
-        return perBalance;
-    }
-
-    public void setPerBalance(BigDecimal perBalance) {
-        this.perBalance = perBalance;
+    public void setPersaldo(BigDecimal persaldo) {
+        this.persaldo = persaldo;
     }
 }
