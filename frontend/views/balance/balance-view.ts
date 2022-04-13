@@ -28,6 +28,7 @@ export class BalanceView extends View  {
     private frmName: string  = '';
     private frmId: string  = '';
     private mask: string = '';
+    private selectedAccount: string = '';
 
     @state()
     private companies: EatFirma[] = [];
@@ -90,15 +91,21 @@ export class BalanceView extends View  {
                 >
                     <vaadin-icon slot="prefix" icon="vaadin:search"></vaadin-icon>
                 </vaadin-text-field>
+                <vaadin-button @click=${this.openTransaction}>T</vaadin-button>
             </div>
             
             <vaadin-split-layout>
             <vaadin-grid .items=${this.filteredBalance}
                          .selectedItems="${this.selectedItems}"
+                         @active-item-changed="${(e: GridActiveItemChangedEvent<BalanceDTO>) => {
+                             const item = e.detail.value;
+                             this.selectedItems = item ? [item] : [];
+                             this.openTransaction()
+                         }}"
                           style="width: 99%; height: 88%" >
                 <vaadin-grid-column path="frmName" .renderer="${this.frmNameRenderer}" auto-width></vaadin-grid-column>
-                <vaadin-grid-column path="account" @dblclick=${this.clickHandler} .cl width="250px"></vaadin-grid-column>
-                <vaadin-grid-column header="Name" .renderer="${this.accountNameRenderer}" auto-width></vaadin-grid-column>
+                <vaadin-grid-column path="account" .renderer="${this.accountRenderer}" .cl width="250px"></vaadin-grid-column>
+                <vaadin-grid-column header="Name"  .renderer="${this.accountNameRenderer}" auto-width></vaadin-grid-column>
 
                 <vaadin-grid-column header="BoWN" text-align="end" width="150px"
                                     .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
@@ -179,10 +186,6 @@ export class BalanceView extends View  {
     </div>`;
     }
 
-    clickHandler() {
-        Notification.show("wohoo");
-    }
-
     companyChanged(e: CustomEvent) {
         this.frmId = e.detail.value as string;
         // @ts-ignore
@@ -241,13 +244,25 @@ export class BalanceView extends View  {
         );
     }
 
+    private frmNameRenderer = (root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+        render(html` <span title='${model.item.frmName}'>${model.item.frmName}</span>`, root);
+    };
+
+    private accountRenderer = (root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
+        render(html` <span title='${model.item.account}' @dblclick=${this.openTransaction}>${model.item.account}</span>`, root);
+    };
+
     private accountNameRenderer = (root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
         render(html` <span title='${model.item.accountName}'>${model.item.accountName}</span>`, root);
     };
 
-    private frmNameRenderer = (root: HTMLElement, _: HTMLElement, model: GridItemModel<BalanceDTO>) => {
-        render(html` <span title='${model.item.frmName}'>${model.item.frmName}</span>`, root);
-    };
+
+    openTransaction() {
+        this.selectedItems.forEach( item => {
+            Notification.show("wohoo" + item.account );
+        })
+
+    }
 
 
 
