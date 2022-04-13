@@ -18,9 +18,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.util.ServletRequestPathUtils;
 import pl.kskowronski.data.services.UserRepo;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -54,6 +57,14 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
         };
     }
 
+    private final class FailingMatcher implements RequestMatcher {
+        @Override
+        public boolean matches(HttpServletRequest request) {
+            System.out.println("Request to " + ServletRequestPathUtils.parseAndCache(request));
+            return true;
+        }
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
           //super.configure(http);
@@ -69,6 +80,8 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
         super.configure(http);
         setLoginView(http, "/login");
         http.logout().logoutUrl(applyUrlMapping("/logout"));
+
+        http.requestMatcher(new FailingMatcher());
 
         if (stateless) {
             setStatelessAuthentication(http,

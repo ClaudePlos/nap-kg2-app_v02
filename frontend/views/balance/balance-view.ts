@@ -61,6 +61,9 @@ export class BalanceView extends View  {
                 <claude-date-to></claude-date-to>
                 <vaadin-button @click=${this.run}>Uruchom</vaadin-button>
                 <vaadin-button theme="primary success" @click=${this.excel}>Excel</vaadin-button>
+                <vaadin-text-field placeholder="Search" style="width: 200px"   >
+                    <vaadin-icon slot="prefix" icon="vaadin:search"></vaadin-icon>
+                </vaadin-text-field>
             </div>
             
             <vaadin-split-layout>

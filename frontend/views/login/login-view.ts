@@ -18,7 +18,7 @@ export class LoginView extends View {
 
     render() {
         return html`<br><br><br><br>
-      <h1>KG-ERP</h1>
+        <p><h2><img style="width: 40px;" src="images/logo.png" />&nbsp;KG-ERP</h2></p>
       <vaadin-login-form
         no-forgot-password
         @login=${this.login}
