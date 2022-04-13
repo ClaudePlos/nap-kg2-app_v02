@@ -20,7 +20,9 @@ import { GridItemModel } from '@vaadin/grid';
 import BalanceDTO from "Frontend/generated/pl/kskowronski/data/entities/BalanceDTO";
 import './claude-date-from';
 import './claude-date-to';
+import './transactions/transactions-view'
 import { balanceViewStore } from './balance-view-store';
+import { transactionsViewStore } from './transactions/transactions-view-store';
 import * as XLSX from 'xlsx';
 
 @customElement('balance-view')
@@ -182,6 +184,8 @@ export class BalanceView extends View  {
                 
             </vaadin-grid>
             </vaadin-split-layout>
+            <transactions-view></transactions-view>
+<!--            <vaadin-button @click="${transactionsViewStore.setOpenedChanged }"> Show dialog </vaadin-button>-->
             
     </div>`;
     }
@@ -207,12 +211,16 @@ export class BalanceView extends View  {
 
         if (this.frmId == "0") {
             const serverResponse = await BalanceEndpoint.calculateBalanceForCompaniesInGK( balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask )
-            this.balance = this.filteredBalance = serverResponse
+            this.balance = this.filteredBalance = serverResponse;
             return
         }
 
         const serverResponse = await BalanceEndpoint.calculateBalance(Number(this.frmId), balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask)
-        console.log(serverResponse.length);
+        if (serverResponse.length == 0) {
+            const notification = Notification.show('Brak danych', {
+                position: 'middle', duration: 1000
+            });
+        }
         this.balance = this.filteredBalance = serverResponse;
     }
 
@@ -259,7 +267,7 @@ export class BalanceView extends View  {
 
     openTransaction() {
         this.selectedItems.forEach( item => {
-            Notification.show("wohoo" + item.account );
+            transactionsViewStore.setOpenedChanged(true, item.account as string);
         })
 
     }
