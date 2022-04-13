@@ -6,6 +6,7 @@ import '@vaadin/number-field';
 import '@vaadin/date-picker';
 import '@vaadin/grid/vaadin-grid';
 import { View } from '../../views/view';
+import { TextFieldValueChangedEvent } from '@vaadin/text-field';
 import { customElement, state } from 'lit/decorators.js';
 import { guard } from 'lit/directives/guard.js';
 import {html, render} from "lit";
@@ -31,6 +32,8 @@ export class BalanceView extends View  {
     private companies: EatFirma[] = [];
 
     @state()
+    private filteredBalance: BalanceDTO[] = [];
+
     private balance: BalanceDTO[] = [];
 
 
@@ -61,13 +64,33 @@ export class BalanceView extends View  {
                 <claude-date-to></claude-date-to>
                 <vaadin-button @click=${this.run}>Uruchom</vaadin-button>
                 <vaadin-button theme="primary success" @click=${this.excel}>Excel</vaadin-button>
-                <vaadin-text-field placeholder="Search" style="width: 200px"   >
+                <vaadin-text-field placeholder="Search" style="width: 200px"
+                                   @value-changed="${(e: TextFieldValueChangedEvent) => {
+                                       const searchTerm = ((e.detail.value as string) || '').trim();
+                                       const matchesTerm = (value: string) => {
+                                           return value.toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0;
+                                       };
+
+                                       this.filteredBalance = this.balance.filter(({ frmName, account, accountName }) => {
+                                           return (
+                                                   !searchTerm ||
+                                                   // @ts-ignore
+                                                   matchesTerm(frmName) ||
+                                                   // @ts-ignore
+                                                   matchesTerm(account) ||
+                                                   // @ts-ignore
+                                                   matchesTerm(accountName)
+                                           );
+                                       });
+                                   }}"
+                >
+                >
                     <vaadin-icon slot="prefix" icon="vaadin:search"></vaadin-icon>
                 </vaadin-text-field>
             </div>
             
             <vaadin-split-layout>
-            <vaadin-grid .items=${this.balance} style="width: 99%; height: 88%">
+            <vaadin-grid .items=${this.filteredBalance} style="width: 99%; height: 88%">
                 <vaadin-grid-column path="frmName" .renderer="${this.frmNameRenderer}" auto-width></vaadin-grid-column>
                 <vaadin-grid-column path="account" width="250px"></vaadin-grid-column>
                 <vaadin-grid-column header="Name" .renderer="${this.accountNameRenderer}" auto-width></vaadin-grid-column>
@@ -177,12 +200,12 @@ export class BalanceView extends View  {
 
         const serverResponse = await BalanceEndpoint.calculateBalance(Number(this.frmId), balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask)
         console.log(serverResponse.length);
-        this.balance = serverResponse
+        this.balance = this.filteredBalance = serverResponse;
     }
 
     async excel() {
 
-        const readyToExport = this.balance;
+        const readyToExport = this.filteredBalance;
 
         const workBook = XLSX.utils.book_new(); // create a new blank book
         const workSheet = XLSX.utils.json_to_sheet(readyToExport);

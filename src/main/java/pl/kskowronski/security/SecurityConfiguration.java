@@ -60,7 +60,7 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
     private final class FailingMatcher implements RequestMatcher {
         @Override
         public boolean matches(HttpServletRequest request) {
-            System.out.println("Request to " + ServletRequestPathUtils.parseAndCache(request));
+            //System.out.println("Request to " + ServletRequestPathUtils.parseAndCache(request));
             return true;
         }
     }
