@@ -19,7 +19,6 @@ import { transactionsViewStore } from './transactions-view-store';
 import {MobxLitElement} from "@adobe/lit-mobx";
 import TransactionDTO from "Frontend/generated/pl/kskowronski/data/entities/TransactionDTO";
 import * as XLSX from "xlsx";
-import {balanceViewStore} from "Frontend/views/balance/balance-view-store";
 
 @customElement('transactions-view')
 export class TransactionsView extends MobxLitElement {
@@ -50,7 +49,7 @@ export class TransactionsView extends MobxLitElement {
                                                .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<TransactionDTO>) => {
                                                    render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.wartosc))}</span>`,root );})}"
                       ></vaadin-grid-sort-column>
-                      <vaadin-grid-sort-column path="tresc" auto-width resizable></vaadin-grid-sort-column>
+                      <vaadin-grid-sort-column path="tresc" .renderer="${this.textNameRenderer}" width="150px" resizable></vaadin-grid-sort-column>
                       <vaadin-grid-sort-column header="WN" text-align="end" width="150px"
                                                .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<TransactionDTO>) => {
                                                    render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.wartoscWn))}</span>`,root );})}"
@@ -84,6 +83,10 @@ export class TransactionsView extends MobxLitElement {
             num
         );
     }
+
+    textNameRenderer = (root: HTMLElement, _: HTMLElement, model: GridItemModel<TransactionDTO>) => {
+        render(html` <span title='${model.item.tresc}'>${model.item.tresc}</span>`, root);
+    };
 
     async excel() {
         const readyToExport = transactionsViewStore.transactions;
