@@ -4,11 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kskowronski.data.entities.BalanceDTO;
 import pl.kskowronski.data.entities.EatFirma;
+import pl.kskowronski.data.entities.TransactionDTO;
 
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -126,29 +129,55 @@ public class EgeriaService {
 
             b.setCurrency((String) item[2]);
 
-
-
-//            b.setBoWnAndWal((BigDecimal) item[5]);
-//            b.setBoWnAndCumulativeTurnoverWal((BigDecimal) item[6]);
-//
-//
-//
-//            b.setBoMaAndWal((BigDecimal) item[9]);
-//            b.setBoMaAndCumulativeTurnoverWal((BigDecimal) item[10]);
-//
-//
-//
-//            b.setPeriodTurnoverWnWal((BigDecimal) item[12]);
-//
-//
-//            b.setPeriodTurnoverMaWal((BigDecimal) item[14]);
-
-
-
             balanceList.add(b);
         });
 
         return balanceList;
+    }
+
+
+
+    @Transactional
+    public List<TransactionDTO> getTransactionsForAccountAndPeriod(Integer frmId, String dateFrom, String dateTo, String accountNumber) {
+
+        setConsolidateCompanyOnCompany(frmId);
+
+        String sql = "select frm_nazwa, knt_pelny_numer, ks_kwota, ks_tresc, dok_numer_wlasny, dok_data_zaksiegowania \n" +
+                    ", (select knt_pelny_numer from kg_konta where knt_id = ks_knt_wn) konto_wn\n" +
+                    ", (select knt_pelny_numer from kg_konta where knt_id = ks_knt_ma) konto_ma\n" +
+                    ", case when ks_knt_wn is not null and (select knt_pelny_numer from kg_konta where knt_id = ks_knt_wn) like '" + accountNumber + "%' then ks_kwota else 0 end wn\n" +
+                    ", case when ks_knt_ma is not null and (select knt_pelny_numer from kg_konta where knt_id = ks_knt_ma) like '" + accountNumber + "%' then -ks_kwota else 0 end ma\n" +
+                    ", case when ks_knt_wn is not null and (select knt_pelny_numer from kg_konta where knt_id = ks_knt_wn) like '" + accountNumber + "%' then ks_kwota else 0 end \n" +
+                    "+ case when ks_knt_ma is not null and (select knt_pelny_numer from kg_konta where knt_id = ks_knt_ma) like '" + accountNumber + "%' then -ks_kwota else 0 end saldo\n" +
+                    "from kgt_ksiegowania, kgt_dokumenty, kg_konta, eat_firmy\n" +
+                    "where ks_dok_id = dok_id \n" +
+                    "and dok_frm_id = frm_id\n" +
+                    "and dok_data_zaksiegowania between to_date('" + dateFrom + "','YYYY-MM-DD') and to_date('" + dateTo + "','YYYY-MM-DD') \n" +
+                    "and (ks_knt_wn = knt_id or ks_knt_ma = knt_id) \n" +
+                    "AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T') \n" +
+                    "--AND ks_rodzaj = 'PK' \n" +
+                    "--and dok_numer_wlasny not like 'BO%' -- czy w styczniu z BO czy bez\n" +
+                    "and knt_pelny_numer like '" + accountNumber + "%' \n" +
+                    "order by frm_nazwa, dok_data_zaksiegowania  ";
+
+        //System.out.println(sql2);
+        List<Object[]> result = em.createNativeQuery(sql).getResultList();
+
+        List<TransactionDTO> transactions = new ArrayList<>();
+        result.forEach( item -> {
+            TransactionDTO t = new TransactionDTO();
+            t.setFrmName((String) item[0]);
+            t.setAccount((String) item[1]);
+            t.setWartosc((BigDecimal) item[2]);
+            t.setTresc((String) item[3]);
+            t.setNumerWlasny((String) item[4]);
+            t.setDataZaksiegowania((Timestamp) item[5]);
+            t.setWartoscWn((BigDecimal) item[8]);
+            t.setWartoscMa((BigDecimal) item[9]);
+            transactions.add(t);
+        });
+
+        return transactions;
     }
 
 }

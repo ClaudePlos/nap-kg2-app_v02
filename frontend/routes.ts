@@ -23,21 +23,21 @@ export const views: ViewRoute[] = [
   // place routes below (more info https://vaadin.com/docs/latest/fusion/routing/overview)
   {
     path: '',
-    component: 'accounts-coping-view',
+    component: 'balance-view',
     icon: '',
     title: '',
-  },
-  {
-    path: 'accounts',
-    component: 'accounts-coping-view',
-    icon: 'la la-globe',
-    title: 'Kopiowanie kont',
   },
   {
     path: 'balance',
     component: 'balance-view',
     icon: 'la la-globe',
     title: 'Obroty i Salda',
+  },
+  {
+    path: 'accounts',
+    component: 'accounts-coping-view',
+    icon: 'la la-globe',
+    title: 'Kopiowanie kont',
   },
   // {
   //   path: 'hello',

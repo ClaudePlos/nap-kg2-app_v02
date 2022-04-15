@@ -34,45 +34,20 @@ export class TransactionsView extends MobxLitElement {
         .renderer="${guard([], () => (root: HTMLElement) => {
             render(
                 html`
-              <vaadin-vertical-layout style="align-items: stretch; height: 100%; max-height: 720px; width: 920px;">
+              <vaadin-vertical-layout style="align-items: stretch; height: 100%; max-height: 720px; width: 1220px;">
                 <header class="draggable" style="border-bottom: 1px solid var(--lumo-contrast-10pct); padding: var(--lumo-space-m) var(--lumo-space-l);">
                   <h2 style="font-size: var(--lumo-font-size-xl); font-weight: 600; line-height: var(--lumo-line-height-xs); margin: 0;">Transakcje:</h2>
                 </header>
-                  
-                <vaadin-scroller scroll-direction="vertical" style="padding: var(--lumo-space-l);">
-                  <vaadin-vertical-layout
-                    aria-labelledby="personal-title"
-                    role="region"
-                    style="align-items: stretch; margin-bottom: var(--lumo-space-xl);"
-                  >
-                    <h3
-                      id="personal-title"
-                      style="font-size: var(--lumo-font-size-l); font-weight: 600; line-height: var(--lumo-line-height-xs); margin: 0 0 var(--lumo-space-s) 0;"
-                    >
-                      Personal information
-                    </h3>
-                    <vaadin-text-field label="First name" value="${transactionsViewStore.account}"></vaadin-text-field>
-                    <vaadin-text-field label="Last name"></vaadin-text-field>
-                    <vaadin-date-picker
-                      initial-position="1990-01-01"
-                      label="Birthdate"
-                    ></vaadin-date-picker>
-                  </vaadin-vertical-layout>
-                  <vaadin-vertical-layout
-                    aria-labelledby="employment-title"
-                    role="region"
-                    style="align-items: stretch;"
-                  >
-                    <h3
-                      id="employment-title"
-                      style="font-size: var(--lumo-font-size-l); font-weight: 600; line-height: var(--lumo-line-height-xs); margin: 0 0 var(--lumo-space-s) 0;"
-                    >
-                      Employment information
-                    </h3>
-                    <vaadin-text-field label="Position"></vaadin-text-field>
-                    <vaadin-text-area label="Additional information"></vaadin-text-area>
-                  </vaadin-vertical-layout>
-                </vaadin-scroller>
+
+                  <vaadin-grid .items="${transactionsViewStore.transactions}">
+                      <vaadin-grid-column path="account" auto-width></vaadin-grid-column>
+                      <vaadin-grid-column path="wartosc" auto-width></vaadin-grid-column>
+                      <vaadin-grid-column path="tresc" auto-width></vaadin-grid-column>
+                      <vaadin-grid-column path="wartoscWn" auto-width></vaadin-grid-column>
+                      <vaadin-grid-column path="wartoscMa" auto-width></vaadin-grid-column>
+                      <vaadin-grid-column path="numerWlasny" auto-width></vaadin-grid-column>
+                      <vaadin-grid-column path="dataZaksiegowania" auto-width></vaadin-grid-column>
+                  </vaadin-grid>
                   
                 <footer style="background-color: var(--lumo-contrast-5pct); padding: var(--lumo-space-s) var(--lumo-space-m); text-align: right;">
                   <vaadin-button

@@ -93,7 +93,6 @@ export class BalanceView extends View  {
                 >
                     <vaadin-icon slot="prefix" icon="vaadin:search"></vaadin-icon>
                 </vaadin-text-field>
-                <vaadin-button @click=${this.openTransaction}>T</vaadin-button>
             </div>
             
             <vaadin-split-layout>
@@ -218,16 +217,25 @@ export class BalanceView extends View  {
 
         const workBook = XLSX.utils.book_new(); // create a new blank book
         const workSheet = XLSX.utils.json_to_sheet(readyToExport);
-        XLSX.utils.book_append_sheet(workBook, workSheet, 'Obroty i Salda'); // add the worksheet to the book
+        const now = new Date();
 
-        const workSheet2 = XLSX.utils.aoa_to_sheet([
-            ["Rok:", balanceViewStore.dateFrom.substring(0,4)],
-            ["Data od:", balanceViewStore.dateFrom],
-            ["Data do:", balanceViewStore.dateTo],
-            ["Wzorzec konta:", this.mask],
-            ["Firma:", this.frmName],
-        ]);
-        XLSX.utils.book_append_sheet(workBook, workSheet2, 'Parametry'); // add the worksheet to the book
+        XLSX.utils.sheet_add_aoa(workSheet, [["Rok: " + balanceViewStore.dateFrom.substring(0,4)]], { origin: "P1" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Data generacji: " + now.toLocaleString("pl-PL")]], { origin: "P2" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Data od: " + balanceViewStore.dateFrom]], { origin: "P3" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Data do: " + balanceViewStore.dateTo]], { origin: "P4" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Firma: " + this.frmName.replace("% - wszystkie firmy","GRUPA REKEEP")]], { origin: "P5" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Maska: " + this.mask]], { origin: "P6" });
+
+        XLSX.utils.book_append_sheet(workBook, workSheet, 'Arkusz1'); // add the worksheet to the book
+
+        // const workSheet2 = XLSX.utils.aoa_to_sheet([
+        //     ["Rok:", balanceViewStore.dateFrom.substring(0,4)],
+        //     ["Data od:", balanceViewStore.dateFrom],
+        //     ["Data do:", balanceViewStore.dateTo],
+        //     ["Wzorzec konta:", this.mask],
+        //     ["Firma:", this.frmName],
+        // ]);
+        // XLSX.utils.book_append_sheet(workBook, workSheet2, 'Parametry'); // add the worksheet to the book
 
         XLSX.writeFile(workBook, 'bilans.xlsx'); // initiate a file download in browser
 

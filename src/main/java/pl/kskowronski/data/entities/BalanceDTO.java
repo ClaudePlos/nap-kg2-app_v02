@@ -1,6 +1,5 @@
 package pl.kskowronski.data.entities;
 
-import javax.persistence.Column;
 import java.math.BigDecimal;
 
 public class BalanceDTO {
@@ -45,8 +44,8 @@ public class BalanceDTO {
 
     private BigDecimal  periodTurnoverMaWal;
 
-
-
+    public BalanceDTO() {
+    }
 
     public String getFrmName() {
         return frmName;
