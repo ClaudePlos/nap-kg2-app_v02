@@ -19,7 +19,7 @@ public class TransactionDTO {
     private String numerWlasny;
     private String numerObcy;
 
-    private Date dataZaksiegowania;
+    private String dataZaksiegowania;
 
     public TransactionDTO() {
     }
@@ -80,11 +80,11 @@ public class TransactionDTO {
         this.numerObcy = numerObcy;
     }
 
-    public Date getDataZaksiegowania() {
+    public String getDataZaksiegowania() {
         return dataZaksiegowania;
     }
 
-    public void setDataZaksiegowania(Date dataZaksiegowania) {
+    public void setDataZaksiegowania(String dataZaksiegowania) {
         this.dataZaksiegowania = dataZaksiegowania;
     }
 

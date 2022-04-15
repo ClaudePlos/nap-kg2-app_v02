@@ -171,7 +171,7 @@ public class EgeriaService {
             t.setWartosc((BigDecimal) item[2]);
             t.setTresc((String) item[3]);
             t.setNumerWlasny((String) item[4]);
-            t.setDataZaksiegowania((Timestamp) item[5]);
+            t.setDataZaksiegowania(((Timestamp) item[5]).toString().substring(0,10));
             t.setWartoscWn((BigDecimal) item[8]);
             t.setWartoscMa((BigDecimal) item[9]);
             transactions.add(t);

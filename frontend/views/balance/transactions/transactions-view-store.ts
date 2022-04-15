@@ -1,6 +1,5 @@
 import {makeAutoObservable} from "mobx";
 import * as TransactionsEndpoint from "Frontend/generated/TransactionsEndpoint";
-import BalanceDTO from "Frontend/generated/pl/kskowronski/data/entities/BalanceDTO";
 import TransactionDTO from "Frontend/generated/pl/kskowronski/data/entities/TransactionDTO";
 
 class TransactionsViewStore {
