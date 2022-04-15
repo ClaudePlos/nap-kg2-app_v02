@@ -38,7 +38,7 @@ export class TransactionsView extends MobxLitElement {
         .renderer="${guard([], () => (root: HTMLElement) => {
             render(
                 html`
-              <vaadin-vertical-layout style="align-items: stretch; height: 100%; max-height: 720px; width: 1220px;">
+              <vaadin-vertical-layout style="align-items: stretch; height: 100%; max-height: 720px; width: 1320px;">
                 <header class="draggable" style="border-bottom: 1px solid var(--lumo-contrast-10pct); padding: var(--lumo-space-m) var(--lumo-space-l);">
                   <h2 style="font-size: var(--lumo-font-size-xl); font-weight: 600; line-height: var(--lumo-line-height-xs); margin: 0;">Transakcje dla ${transactionsViewStore.account}% </h2>
                 </header>

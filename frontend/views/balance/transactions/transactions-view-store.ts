@@ -8,7 +8,7 @@ class TransactionsViewStore {
     account = ''
     dateFrom = ''
     dataTo = ''
-    frmId = ''
+    frmName = ''
 
     transactions: TransactionDTO[] = [];
 
@@ -16,18 +16,18 @@ class TransactionsViewStore {
         makeAutoObservable(this)
     }
 
-    async setOpenedChanged(newValue: boolean, account: string, dateFrom: string, dataTo: string, frmId: string) {
-        this.getTransactions(newValue, frmId, dateFrom, dataTo, account);
+    async setOpenedChanged(newValue: boolean, account: string, dateFrom: string, dataTo: string, frmName: string) {
+        this.getTransactions(newValue, frmName, dateFrom, dataTo, account);
     }
 
-    async getTransactions( newValue: boolean, frmId: string, dateFrom: string, dataTo: string, account: string) {
-        const serverResponse = await TransactionsEndpoint.getTransactionsForAccountAndPeriod(Number(frmId), dateFrom, dataTo, account);
+    async getTransactions( newValue: boolean, frmName: string, dateFrom: string, dataTo: string, account: string) {
+        const serverResponse = await TransactionsEndpoint.getTransactionsForAccountAndPeriod(frmName, dateFrom, dataTo, account);
         this.transactions = serverResponse;
         this.dialogOpened = newValue
         this.account = account
         this.dateFrom = dateFrom
         this.dataTo = dataTo
-        this.frmId = frmId
+        this.frmName = frmName
     }
 
 

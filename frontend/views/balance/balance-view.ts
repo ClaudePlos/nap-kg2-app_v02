@@ -263,11 +263,12 @@ export class BalanceView extends View  {
 
     openTransaction() {
         this.selectedItems.forEach( item => {
+            // @ts-ignore
             transactionsViewStore.setOpenedChanged(true
                 , item.account as string
                 , balanceViewStore.dateFrom
                 , balanceViewStore.dateTo
-                , this.frmId
+                , item.frmName as string
             )
         })
 
