@@ -10,10 +10,8 @@ import pl.kskowronski.data.entities.TransactionDTO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -24,14 +22,22 @@ public class EgeriaService {
     private EntityManager em;
 
     @Transactional
+    public void setConsolidateCompany() {
+        this.em.createNativeQuery("BEGIN eap_globals.USTAW_konsolidacje('T'); END;")
+                //.setParameter("inParam1", inParam1)
+                .executeUpdate();
+    }
+
+    @Transactional
     public void setConsolidateCompanyOnCompany(Integer frmId) {
         this.em.createNativeQuery("BEGIN eap_globals.USTAW_firme(" + frmId + "); eap_globals.USTAW_konsolidacje('N'); END;")
                 .executeUpdate();
     }
 
     @Transactional
-    public String copyAccountToAnotherCompany(Integer frmIdCompanyTo, String mask, String year, String level) {
-        String ret = "Skopiowano " + mask +  " do : " + frmIdCompanyTo;
+    public String copyAccountToAnotherCompany(Integer frmIdCompanyTo, String mask, String year, String level, String frmName) {
+        setConsolidateCompany();
+        String ret = "Skopiowano " + mask +  " do : " + frmName;
         /*
          --rok z którego kopiujemy
          --rok do którego kopiujemy
@@ -41,7 +47,7 @@ public class EgeriaService {
          -- maska konta(syntetyka)
           -- maska kont, których nie chcemy przenosić
         * */
-        String sql = "BEGIN mkp_obj_plany_kont.kopiuj(" + year + "," + year + ", 300326, " + frmIdCompanyTo + ", " + level + ", '" + mask + "','nie-ma-takiego'); END;";
+        String sql = "BEGIN mkp_obj_plany_kont.kopiuj(" + year + ", " + year + ", 300326, " + frmIdCompanyTo + ", '" + level  + "', '" + mask + "','nie-ma-takiego'); END;";
         try {
             this.em.createNativeQuery(sql).executeUpdate();
         } catch (Exception e){

@@ -7,7 +7,6 @@ import pl.kskowronski.data.entities.EatFirma;
 import pl.kskowronski.data.services.EatFirmaRepo;
 import pl.kskowronski.data.services.EgeriaService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Endpoint
@@ -32,8 +31,8 @@ public class CompanyEndpoint {
         return item;
     }
 
-    public String copyAccountsToCompany( Integer frmIdCompanyTo, String mask, String year, String level ) {
-        String ret = egeriaService.copyAccountToAnotherCompany(frmIdCompanyTo, mask, year, level);
+    public String copyAccountsToCompany( Integer frmIdCompanyTo, String mask, String year, String level, String frmName ) {
+        String ret = egeriaService.copyAccountToAnotherCompany(frmIdCompanyTo, mask, year, level, frmName);
         return ret;
     }
 

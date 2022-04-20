@@ -71,7 +71,8 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
 
         super.configure(http);
         setLoginView(http, "/login");
-        http.logout().logoutUrl(applyUrlMapping("/logout"));
+
+        //http.logout().logoutUrl(applyUrlMapping("/logout"));
 
         if (stateless) {
             setStatelessAuthentication(http,

@@ -19,10 +19,10 @@ export class AccountCopingView extends LitElement  {
     mask = '';
     year = '';
     level = '';
-    frmIdCompanyCopyTo = '';
+    frmIdCompanyCopyTo : number = 0;
 
     @state()
-    private comapnies: EatFirma[] = [];
+    private companies: EatFirma[] = [];
 
     @state()
     private items = ['Chrome', 'Edge', 'Firefox', 'Safari'];
@@ -35,7 +35,7 @@ export class AccountCopingView extends LitElement  {
             
             <div>
                 <vaadin-combo-box label="Do firmy"
-                                  .items="${this.comapnies}"
+                                  .items="${this.companies}"
                                   @value-changed="${this.companyChanged}"
                                   item-label-path="frmName"
                                   item-value-path="frmId"
@@ -45,7 +45,7 @@ export class AccountCopingView extends LitElement  {
                 ></vaadin-combo-box>
             </div>
             
-            <div><vaadin-text-field label="Maska dla kont syntetycznych, które mają być skopiowane" value="5%" @value-changed=${this.maskChanged} clear-button-visible></vaadin-text-field></div>
+            <div><vaadin-text-field label="Maska dla kont syntetycznych, które mają być skopiowane" value="501-Z386" @value-changed=${this.maskChanged} clear-button-visible></vaadin-text-field></div>
             <div><vaadin-text-field label="Rok" value="2022" @value-changed=${this.yearChanged} clear-button-visible></vaadin-text-field></div>
             <div><vaadin-text-field label="Poziom analityki" value="5" @value-changed=${this.levelChanged} clear-button-visible></vaadin-text-field></div>
             <div><vaadin-button @click=${this.copyAccountsToCompany}>Kopiuj</vaadin-button><div>
@@ -54,7 +54,7 @@ export class AccountCopingView extends LitElement  {
             <!-- grid example:
             <vaadin-checkbox></vaadin-checkbox>
             <h3>Comany List</h3>
-            <vaadin-grid .items="${this.comapnies}" theme="row-stripes" style="max-width: 400px">
+            <vaadin-grid .items="${this.companies}" theme="row-stripes" style="max-width: 400px">
                 <vaadin-grid-column path="frmName"></vaadin-grid-column>
                 <vaadin-grid-column path="frmKlId"></vaadin-grid-column>
             </vaadin-grid>
@@ -78,20 +78,26 @@ export class AccountCopingView extends LitElement  {
 
     companyChanged(e: CustomEvent) {
         console.log(e.detail.value as string);
-        this.frmIdCompanyCopyTo = e.detail.value as string;
+        this.frmIdCompanyCopyTo = e.detail.value as number;
     }
 
     async copyAccountsToCompany() {
-        const serverResponse = await CompanyEndpoint.copyAccountsToCompany(Number(this.frmIdCompanyCopyTo), this.mask, this.year, this.level);
-        Notification.show(serverResponse as string);
+
+        const frm : EatFirma | undefined = this.companies.find(item => item.frmId == this.frmIdCompanyCopyTo );
+
+        const serverResponse = await CompanyEndpoint.copyAccountsToCompany(Number(this.frmIdCompanyCopyTo), this.mask, this.year, this.level, frm?.frmName);
+        const notification = Notification.show(serverResponse as string, {
+            position: 'middle', duration: 3000
+        });
+        notification.setAttribute('theme', 'success');
     }
 
 
 
 
     async firstUpdated() {
-        const comapnies = await CompanyEndpoint.getCompanies();
-        this.comapnies = comapnies;
+        const companies = await CompanyEndpoint.getCompanies();
+        this.companies = companies;
     }
 
     connectedCallback() {
