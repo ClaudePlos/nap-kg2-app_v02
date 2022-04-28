@@ -38,7 +38,7 @@ export const views: ViewRoute[] = [
     path: 'movements',
     component: 'movements-view',
     icon: 'la la-globe',
-    title: 'Obroty i salda 34',
+    title: 'Obroty i Salda 34',
   },
   {
     path: 'accounts',
