@@ -2,6 +2,7 @@ import '@vaadin/button';
 import '@vaadin/combo-box'
 import '@vaadin/checkbox';
 import '@vaadin/text-field';
+import '@vaadin/text-field';
 import '@vaadin/number-field';
 import '@vaadin/date-picker';
 import '@vaadin/grid/vaadin-grid';
@@ -29,6 +30,7 @@ import * as XLSX from 'xlsx';
 export class BalanceView extends View  {
     private frmName: string  = '';
     private frmId: string  = '';
+    private lowestLevel: string  = 'N';
     private mask: string = '';
     private selectedAccount: string = '';
 
@@ -93,6 +95,9 @@ export class BalanceView extends View  {
                 >
                     <vaadin-icon slot="prefix" icon="vaadin:search"></vaadin-icon>
                 </vaadin-text-field>
+            </div>
+            <div>
+                <vaadin-checkbox @click=${this.changeLowestLevel} label="Najniższy poziom analityki?"></vaadin-checkbox>
             </div>
             
             <vaadin-split-layout>
@@ -187,6 +192,9 @@ export class BalanceView extends View  {
         this.mask = e.detail.value as string;
     }
 
+    async changeLowestLevel() {
+       this.lowestLevel === "N" ? this.lowestLevel = "T" : this.lowestLevel = "N";
+    }
 
     async run() {
         if (this.frmId === "") {
@@ -197,12 +205,12 @@ export class BalanceView extends View  {
         }
 
         if (this.frmId == "0") {
-            const serverResponse = await BalanceEndpoint.calculateBalanceForCompaniesInGK( balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask )
+            const serverResponse = await BalanceEndpoint.calculateBalanceForCompaniesInGK( balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask, this.lowestLevel)
             this.balance = this.filteredBalance = serverResponse;
             return
         }
 
-        const serverResponse = await BalanceEndpoint.calculateBalance(Number(this.frmId), balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask)
+        const serverResponse = await BalanceEndpoint.calculateBalance(Number(this.frmId), balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask, this.lowestLevel)
         if (serverResponse.length == 0) {
             const notification = Notification.show('Brak danych', {
                 position: 'middle', duration: 1000

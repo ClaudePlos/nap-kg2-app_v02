@@ -3,8 +3,8 @@ package pl.kskowronski.data.services;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kskowronski.data.entities.BalanceDTO;
-import pl.kskowronski.data.entities.EatFirma;
 import pl.kskowronski.data.entities.TransactionDTO;
+import pl.kskowronski.data.entities.MovementDTO;
 
 
 import javax.persistence.EntityManager;
@@ -185,5 +185,129 @@ public class EgeriaService {
 
         return transactions;
     }
+
+    @Transactional
+    public List<MovementDTO> calculateTurnover(String dateFrom, String dateTo, String mask) {
+        String sql = "select firma, knt_pelny_numer,knt_nazwa\n" +
+                ", sum(a) A,sum(b)  B,sum(C)C,sum(D)  D,\n" +
+                " sum(E) E,sum(F) F\n" +
+                " from (\n" +
+                "select firma, knt_pelny_numer,knt_nazwa,sum(kwota)a ,0 b,0 C, 0 D,0 E, 0 F from (\n" +
+                "select frm_nazwa firma,knt_pelny_numer,  sum(ks_kwota) kwota,knt_nazwa\n" +
+                " from kgt_dokumenty,kgt_ksiegowania,kg_konta,eat_firmy\n" +
+                "where dok_id=ks_dok_id\n" +
+                "and dok_frm_Id=frm_id\n" +
+                "and knt_id=ks_knt_wn\n" +
+                "and knt_pelny_numer like '" + mask + "'\n" +
+                "and KNT_TYP='B'\n" +
+                "and dok_numer_wlasny  like 'BO%'\n" +
+                "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
+                "and to_Char(dok_data_zaksiegowania,'yyyy')=to_CHAR('" + dateTo + "','YYYY')\n" +
+                "group by frm_nazwa,dok_data_zaksiegowania,knt_pelny_numer,knt_nazwa\n" +
+                ") \n" +
+                "group by firma, knt_pelny_numer,knt_nazwa\n" +
+                " union all\n" +
+                " select firma,  knt_pelny_numer,knt_nazwa,0 a,sum(kwota)  b,0 C, 0 D,0 E, 0 F from (\n" +
+                "select frm_nazwa firma,knt_pelny_numer,  sum(ks_kwota) kwota,knt_nazwa\n" +
+                " from kgt_dokumenty,kgt_ksiegowania,kg_konta,eat_firmy\n" +
+                "where dok_id=ks_dok_id\n" +
+                "and dok_frm_Id=frm_id\n" +
+                "and knt_id=ks_knt_ma\n" +
+                "and knt_pelny_numer like  '" + mask + "'\n" +
+                "and KNT_TYP='B'\n" +
+                "and dok_numer_wlasny  like 'BO%'\n" +
+                "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
+                "and to_Char(dok_data_zaksiegowania,'yyyy')=to_CHAR('" + dateTo + "','YYYY')\n" +
+                "group by frm_nazwa,dok_data_zaksiegowania,knt_pelny_numer,knt_nazwa\n" +
+                ") \n" +
+                "group by firma, knt_pelny_numer,knt_nazwa\n" +
+                "union all\n" +
+                " select firma,  knt_pelny_numer,knt_nazwa,0 a, 0 b, sum(kwota)  C, 0 D,0 E, 0 F from (\n" +
+                "select frm_nazwa firma,knt_pelny_numer,  sum(ks_kwota) kwota,knt_nazwa\n" +
+                " from kgt_dokumenty,kgt_ksiegowania,kg_konta,eat_firmy\n" +
+                "where dok_id=ks_dok_id\n" +
+                "and dok_frm_Id=frm_id\n" +
+                "and knt_id=ks_knt_WN\n" +
+                "and knt_pelny_numer like  '" + mask + "'\n" +
+                "and KNT_TYP='B'\n" +
+                "and dok_numer_wlasny not like 'BO%'\n" +
+                "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
+                "and dok_data_zaksiegowania>= '" + dateFrom + "'\n" +
+                "and dok_data_zaksiegowania<= '" + dateTo + "'\n" +
+                "group by frm_nazwa,dok_data_zaksiegowania,knt_pelny_numer,knt_nazwa\n" +
+                ") \n" +
+                "group by firma,knt_pelny_numer,knt_nazwa\n" +
+                "union all\n" +
+                "select firma, knt_pelny_numer,knt_nazwa,0 a,0 b,0 c,sum(kwota)   D,0 E, 0 F from (\n" +
+                "select frm_nazwa firma,knt_pelny_numer,  sum(ks_kwota) kwota,knt_nazwa\n" +
+                " from kgt_dokumenty,kgt_ksiegowania,kg_konta,eat_firmy\n" +
+                "where dok_id=ks_dok_id\n" +
+                "and dok_frm_Id=frm_id\n" +
+                "and knt_id=ks_knt_ma\n" +
+                "and knt_pelny_numer like  '" + mask + "'\n" +
+                "and KNT_TYP='B'\n" +
+                "and dok_numer_wlasny not like 'BO%'\n" +
+                "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
+                "and dok_data_zaksiegowania>= '" + dateFrom + "'\n" +
+                "and dok_data_zaksiegowania<= '" + dateTo + "'\n" +
+                "group by frm_nazwa,dok_data_zaksiegowania,knt_pelny_numer,knt_nazwa\n" +
+                ") \n" +
+                "group by firma, knt_pelny_numer,knt_nazwa\n" +
+                "union all\n" +
+                "select firma,  knt_pelny_numer,knt_nazwa,0 a,0 b,0 c,0 d,sum(kwota)    E, 0 F from (\n" +
+                "select frm_nazwa firma,knt_pelny_numer,  sum(ks_kwota) kwota,knt_nazwa\n" +
+                " from kgt_dokumenty,kgt_ksiegowania,kg_konta,eat_firmy\n" +
+                "where dok_id=ks_dok_id\n" +
+                "and dok_frm_Id=frm_id\n" +
+                "and knt_id=ks_knt_wn\n" +
+                "and knt_pelny_numer like  '" + mask + "'\n" +
+                "and KNT_TYP='B'\n" +
+                "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
+                "and dok_data_zaksiegowania<= '" + dateTo + "'\n" +
+                "and to_char(dok_data_zaksiegowania,'yyyy')= to_char('" + dateTo + "','yyyy')\n" +
+                "group by frm_nazwa,knt_pelny_numer,knt_nazwa\n" +
+                ") \n" +
+                "group by firma,knt_pelny_numer,knt_nazwa\n" +
+                "union all\n" +
+                "select firma, knt_pelny_numer,knt_nazwa,0 a,0 b,0 c,0 d,0 E,sum(kwota)    F from (\n" +
+                "select frm_nazwa firma,knt_pelny_numer,  sum(ks_kwota) kwota,knt_nazwa\n" +
+                " from kgt_dokumenty,kgt_ksiegowania,kg_konta,eat_firmy\n" +
+                "where dok_id=ks_dok_id\n" +
+                "and dok_frm_Id=frm_id\n" +
+                "and knt_id=ks_knt_ma\n" +
+                "and knt_pelny_numer like  '" + mask + "'\n" +
+                "and KNT_TYP='B'\n" +
+                "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
+                "and dok_data_zaksiegowania<= '" + dateTo + "'\n" +
+                "and to_char(dok_data_zaksiegowania,'yyyy')= to_char('" + dateTo + "','yyyy')\n" +
+                "group by frm_nazwa,knt_pelny_numer,knt_nazwa\n" +
+                ") \n" +
+                "group by firma, knt_pelny_numer,knt_nazwa\n" +
+                ")GROUP BY \n" +
+                "firma, knt_pelny_numer,knt_nazwa";
+        // System.out.println(sql);
+        this.em.createNativeQuery(sql).executeUpdate();
+
+
+        List<Object[]> result = em.createNativeQuery(sql).getResultList();
+
+        List<MovementDTO> turnoverList = new ArrayList<>();
+        result.forEach( item -> {
+            MovementDTO t = new MovementDTO();
+            t.setFrmName((String) item[0]);
+            t.setAccount((String) item[1]);
+            t.setBoWn((BigDecimal) item[2]);
+            t.setBoMa((BigDecimal) item[3]);
+            t.setObrotyWn((BigDecimal) item[4]);
+            t.setObrotyMa((BigDecimal) item[5]);
+            t.setObrotyWnNarPlusBO((BigDecimal) item[6]);
+            t.setObrotyMaNarPlusBO((BigDecimal) item[7]);
+            turnoverList.add(t);
+        });
+
+        return turnoverList;
+    }
+
+
 
 }

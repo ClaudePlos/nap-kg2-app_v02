@@ -56,5 +56,8 @@ Docker:
 sudo docker build -t nap-kg-app .
 sudo docker run -p 8081:8080 nap-kg-app:latest
 
+Docker ssl:
+sudo docker run -p 8181:8181 nap-kg-app:latest
+
 </pre>
 

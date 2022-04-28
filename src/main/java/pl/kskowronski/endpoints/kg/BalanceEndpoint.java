@@ -25,7 +25,7 @@ public class BalanceEndpoint {
     }
 
 
-    public @Nonnull List<@Nonnull BalanceDTO> calculateBalance( Integer frmId, String dateFrom, String dateTo, String mask ) {
+    public @Nonnull List<@Nonnull BalanceDTO> calculateBalance( Integer frmId, String dateFrom, String dateTo, String mask, String lowestLevel ) {
         //System.out.println( "ksko:" + frmId + " " + dateFrom + " " + dateTo + " " + mask);
         egeriaService.setConsolidateCompanyOnCompany(frmId);
         List<BalanceDTO> ret = egeriaService.calculateBalance(eatFirmaRepo.findById(BigDecimal.valueOf(frmId)).get().getFrmName(), dateFrom, dateTo, mask);
@@ -33,7 +33,7 @@ public class BalanceEndpoint {
     }
 
 
-    public @Nonnull List<@Nonnull BalanceDTO> calculateBalanceForCompaniesInGK(String dateFrom, String dateTo, String mask ) {
+    public @Nonnull List<@Nonnull BalanceDTO> calculateBalanceForCompaniesInGK(String dateFrom, String dateTo, String mask, String lowestLevel ) {
         //System.out.println( "ksko:" + dateFrom + " " + dateTo + " " + mask);
         List<EatFirma> companies = eatFirmaRepo.findAllForGroupCapital();
         List<BalanceDTO> ret = new ArrayList<>();
