@@ -3,6 +3,7 @@ import './views/helloworld/hello-world-view';
 import './views/main-layout';
 import './views/accountscoping/accounts-coping-view';
 import './views/balance/balance-view';
+import './views/movements/movements-view';
 
 import { appStore } from './stores/app-store';
 import { autorun } from 'mobx';

@@ -187,7 +187,7 @@ public class EgeriaService {
     }
 
     @Transactional
-    public List<MovementDTO> calculateTurnover(String dateFrom, String dateTo, String mask) {
+    public List<MovementDTO> calculateMovements(String dateFrom, String dateTo, String mask) {
         String sql = "select firma, knt_pelny_numer,knt_nazwa\n" +
                 ", sum(a) A,sum(b)  B,sum(C)C,sum(D)  D,\n" +
                 " sum(E) E,sum(F) F\n" +
@@ -202,7 +202,7 @@ public class EgeriaService {
                 "and KNT_TYP='B'\n" +
                 "and dok_numer_wlasny  like 'BO%'\n" +
                 "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
-                "and to_Char(dok_data_zaksiegowania,'yyyy')=to_CHAR('" + dateTo + "','YYYY')\n" +
+                "and to_Char(dok_data_zaksiegowania,'yyyy')='" + dateTo.substring(0,4) + "'\n" +
                 "group by frm_nazwa,dok_data_zaksiegowania,knt_pelny_numer,knt_nazwa\n" +
                 ") \n" +
                 "group by firma, knt_pelny_numer,knt_nazwa\n" +
@@ -217,7 +217,7 @@ public class EgeriaService {
                 "and KNT_TYP='B'\n" +
                 "and dok_numer_wlasny  like 'BO%'\n" +
                 "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
-                "and to_Char(dok_data_zaksiegowania,'yyyy')=to_CHAR('" + dateTo + "','YYYY')\n" +
+                "and to_Char(dok_data_zaksiegowania,'yyyy')='" + dateTo.substring(0,4) + "'\n" +
                 "group by frm_nazwa,dok_data_zaksiegowania,knt_pelny_numer,knt_nazwa\n" +
                 ") \n" +
                 "group by firma, knt_pelny_numer,knt_nazwa\n" +
@@ -232,8 +232,8 @@ public class EgeriaService {
                 "and KNT_TYP='B'\n" +
                 "and dok_numer_wlasny not like 'BO%'\n" +
                 "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
-                "and dok_data_zaksiegowania>= '" + dateFrom + "'\n" +
-                "and dok_data_zaksiegowania<= '" + dateTo + "'\n" +
+                "and dok_data_zaksiegowania >= to_date('" + dateFrom + "','YYYY-MM-DD')\n" +
+                "and dok_data_zaksiegowania <= to_date('" + dateTo + "','YYYY-MM-DD')\n" +
                 "group by frm_nazwa,dok_data_zaksiegowania,knt_pelny_numer,knt_nazwa\n" +
                 ") \n" +
                 "group by firma,knt_pelny_numer,knt_nazwa\n" +
@@ -248,8 +248,8 @@ public class EgeriaService {
                 "and KNT_TYP='B'\n" +
                 "and dok_numer_wlasny not like 'BO%'\n" +
                 "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
-                "and dok_data_zaksiegowania>= '" + dateFrom + "'\n" +
-                "and dok_data_zaksiegowania<= '" + dateTo + "'\n" +
+                "and dok_data_zaksiegowania>= to_date('" + dateFrom + "','YYYY-MM-DD')\n" +
+                "and dok_data_zaksiegowania<= to_date('" + dateTo + "','YYYY-MM-DD')\n" +
                 "group by frm_nazwa,dok_data_zaksiegowania,knt_pelny_numer,knt_nazwa\n" +
                 ") \n" +
                 "group by firma, knt_pelny_numer,knt_nazwa\n" +
@@ -263,8 +263,8 @@ public class EgeriaService {
                 "and knt_pelny_numer like  '" + mask + "'\n" +
                 "and KNT_TYP='B'\n" +
                 "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
-                "and dok_data_zaksiegowania<= '" + dateTo + "'\n" +
-                "and to_char(dok_data_zaksiegowania,'yyyy')= to_char('" + dateTo + "','yyyy')\n" +
+                "and dok_data_zaksiegowania<= to_date('" + dateTo + "','YYYY-MM-DD')\n" +
+                "and to_char(dok_data_zaksiegowania,'yyyy')= '" + dateTo.substring(0,4) + "'\n" +
                 "group by frm_nazwa,knt_pelny_numer,knt_nazwa\n" +
                 ") \n" +
                 "group by firma,knt_pelny_numer,knt_nazwa\n" +
@@ -278,13 +278,12 @@ public class EgeriaService {
                 "and knt_pelny_numer like  '" + mask + "'\n" +
                 "and KNT_TYP='B'\n" +
                 "AND( dok_F_SYMULACJA='T' or dok_f_zaksiegowany ='T')\n" +
-                "and dok_data_zaksiegowania<= '" + dateTo + "'\n" +
-                "and to_char(dok_data_zaksiegowania,'yyyy')= to_char('" + dateTo + "','yyyy')\n" +
+                "and dok_data_zaksiegowania<= to_date('" + dateTo + "','YYYY-MM-DD')\n" +
+                "and to_char(dok_data_zaksiegowania,'yyyy')= '" + dateTo.substring(0,4) + "'\n" +
                 "group by frm_nazwa,knt_pelny_numer,knt_nazwa\n" +
                 ") \n" +
                 "group by firma, knt_pelny_numer,knt_nazwa\n" +
-                ")GROUP BY \n" +
-                "firma, knt_pelny_numer,knt_nazwa";
+                ")GROUP BY firma, knt_pelny_numer,knt_nazwa order by firma, knt_pelny_numer";
         // System.out.println(sql);
         this.em.createNativeQuery(sql).executeUpdate();
 
@@ -296,12 +295,13 @@ public class EgeriaService {
             MovementDTO t = new MovementDTO();
             t.setFrmName((String) item[0]);
             t.setAccount((String) item[1]);
-            t.setBoWn((BigDecimal) item[2]);
-            t.setBoMa((BigDecimal) item[3]);
-            t.setObrotyWn((BigDecimal) item[4]);
-            t.setObrotyMa((BigDecimal) item[5]);
-            t.setObrotyWnNarPlusBO((BigDecimal) item[6]);
-            t.setObrotyMaNarPlusBO((BigDecimal) item[7]);
+            t.setAccountName((String) item[2]);
+            t.setBoWn((BigDecimal) item[3]);
+            t.setBoMa((BigDecimal) item[4]);
+            t.setObrotyWn((BigDecimal) item[5]);
+            t.setObrotyMa((BigDecimal) item[6]);
+            t.setObrotyWnNarPlusBO((BigDecimal) item[7]);
+            t.setObrotyMaNarPlusBO((BigDecimal) item[8]);
             turnoverList.add(t);
         });
 

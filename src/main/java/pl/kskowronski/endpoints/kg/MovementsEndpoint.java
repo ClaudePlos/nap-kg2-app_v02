@@ -19,10 +19,9 @@ public class MovementsEndpoint {
         this.egeriaService = egeriaService;
     }
 
-    public @Nonnull List<@Nonnull MovementDTO> calculateTurnover(String dateFrom, String dateTo, String mask) {
-        //System.out.println( "ksko:" + frmId + " " + dateFrom + " " + dateTo + " " + mask);
+    public @Nonnull List<@Nonnull MovementDTO> calculateMovements(String dateFrom, String dateTo, String mask) {
         egeriaService.setConsolidateCompany();
-        List<MovementDTO> ret = egeriaService.calculateTurnover( dateFrom, dateTo, mask);
+        List<MovementDTO> ret = egeriaService.calculateMovements( dateFrom, dateTo, mask);
         return ret;
     }
 

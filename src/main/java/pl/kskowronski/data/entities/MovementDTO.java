@@ -6,6 +6,7 @@ public class MovementDTO {
 
     private String  frmName;
     private String  account;
+    private String  accountName;
 
     private BigDecimal boWn;
     private BigDecimal  boMa;
@@ -21,6 +22,14 @@ public class MovementDTO {
 
     public String getFrmName() {
         return frmName;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     public void setFrmName(String frmName) {
