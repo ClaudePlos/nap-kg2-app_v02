@@ -14,6 +14,9 @@ public class MovementDTO {
     private BigDecimal obrotyWn;
     private BigDecimal obrotyMa;
 
+    private BigDecimal saldoWn;
+    private BigDecimal saldoMa;
+
     private BigDecimal obrotyWnNarPlusBO;
     private BigDecimal obrotyMaNarPlusBO;
 
@@ -90,5 +93,21 @@ public class MovementDTO {
 
     public void setObrotyMaNarPlusBO(BigDecimal obrotyMaNarPlusBO) {
         this.obrotyMaNarPlusBO = obrotyMaNarPlusBO;
+    }
+
+    public BigDecimal getSaldoWn() {
+        return saldoWn;
+    }
+
+    public void setSaldoWn(BigDecimal saldoWn) {
+        this.saldoWn = saldoWn;
+    }
+
+    public BigDecimal getSaldoMa() {
+        return saldoMa;
+    }
+
+    public void setSaldoMa(BigDecimal saldoMa) {
+        this.saldoMa = saldoMa;
     }
 }

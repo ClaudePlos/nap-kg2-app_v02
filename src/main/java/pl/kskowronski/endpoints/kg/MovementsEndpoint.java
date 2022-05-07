@@ -19,8 +19,13 @@ public class MovementsEndpoint {
         this.egeriaService = egeriaService;
     }
 
-    public @Nonnull List<@Nonnull MovementDTO> calculateMovements(String dateFrom, String dateTo, String mask) {
-        egeriaService.setConsolidateCompany();
+    public @Nonnull List<@Nonnull MovementDTO> calculateMovements(Integer frmId, String dateFrom, String dateTo, String mask) {
+        if (frmId == 0) {
+            egeriaService.setConsolidateCompany();
+        } else {
+            egeriaService.setConsolidateCompanyOnCompany(frmId);
+        }
+
         List<MovementDTO> ret = egeriaService.calculateMovements( dateFrom, dateTo, mask);
         return ret;
     }

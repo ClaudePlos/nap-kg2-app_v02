@@ -19,19 +19,34 @@ import MovementDTO from "Frontend/generated/pl/kskowronski/data/entities/Movemen
 import {MovementsEndpoint} from "Frontend/generated/endpoints";
 import BalanceDTO from "Frontend/generated/pl/kskowronski/data/entities/BalanceDTO";
 import * as XLSX from "xlsx";
+import EatFirma from "Frontend/generated/pl/kskowronski/data/entities/EatFirma";
+import * as CompanyEndpoint from "Frontend/generated/CompanyEndpoint";
+import {ComboBox} from "@vaadin/combo-box";
+import EatFirmaModel from "Frontend/generated/pl/kskowronski/data/entities/EatFirmaModel";
 
 
 @customElement('movements-view')
 export class MovementsView extends View  {
-
+    private frmName: string  = '';
+    private frmId: number | undefined;
     private mask: string = '';
+
+    @state()
+    private companies: EatFirma[] = [];
 
     @state()
     private filteredMovements: MovementDTO[] = [];
 
     private movements: MovementDTO[] = [];
 
+    @state()
+    private company: EatFirma | undefined;
+
     async firstUpdated() {
+        const companies = await CompanyEndpoint.getCompanies();
+        this.companies = companies;
+        this.company = companies[35];
+        this.frmId = this.company.frmId;
     }
 
     connectedCallback() {
@@ -42,6 +57,16 @@ export class MovementsView extends View  {
     render() {
         return html`<div style="width: 99%; height: 100%; padding-left: 5px">
             <div>
+                <vaadin-combo-box  id="companies-box" label="Do firmy"
+                                   .items="${this.companies}"
+                                   .value="${this.company?.frmName}"
+                                   @value-changed="${this.companyChanged}"
+                                   item-label-path="frmName"
+                                   item-value-path="frmId"
+                                   allow-custom-value
+                                   label="Browser"
+                                   helper-text="Wybierz firmę"
+                ></vaadin-combo-box>
                 <vaadin-text-field label="Maska" value="100%" @value-changed=${this.maskChanged} clear-button-visible></vaadin-text-field>
                 <claude-date-from></claude-date-from>
                 <claude-date-to></claude-date-to>
@@ -97,6 +122,15 @@ export class MovementsView extends View  {
                                         render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.obrotyMa))}</span>`,root );})}"
                 ></vaadin-grid-column>
 
+                <vaadin-grid-column header="saldoWn" text-align="end" width="150px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.saldoWn))}</span>`,root );})}"
+                ></vaadin-grid-column>
+                <vaadin-grid-column header="saldoMa" text-align="end" width="150px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.saldoMa))}</span>`,root );})}"
+                ></vaadin-grid-column>
+
                 
                 
                 <vaadin-grid-column header="obrotyWnNarPlusBO" text-align="end" width="150px"
@@ -112,13 +146,23 @@ export class MovementsView extends View  {
         </div>`;
     }
 
+    companyChanged(e: CustomEvent) {
+        if ( e.detail.value === "% - wszystkie firmy") {
+            this.frmId = 0;
+        } else {
+            this.frmId = e.detail.value as number;
+        }
+        // @ts-ignore
+        this.frmName = this.companies.find( item => item.frmId == e.detail.value ).frmName;
+    }
+
     maskChanged(e: CustomEvent) {
         this.mask = e.detail.value as string;
     }
 
     async run() {
 
-        const serverResponse = await MovementsEndpoint.calculateMovements( balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask)
+        const serverResponse = await MovementsEndpoint.calculateMovements( this.frmId, balanceViewStore.dateFrom, balanceViewStore.dateTo, this.mask)
         if (serverResponse.length == 0) {
             const notification = Notification.show('Brak danych', {
                 position: 'middle', duration: 1000
