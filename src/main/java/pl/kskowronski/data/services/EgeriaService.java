@@ -58,7 +58,13 @@ public class EgeriaService {
 
 
     @Transactional
-    public List<BalanceDTO> calculateBalance(String frmName, String dateFrom, String dateTo, String mask) {
+    public List<BalanceDTO> calculateBalance(String frmName, String dateFrom, String dateTo, String mask, String lowestLevel) {
+        String typRaportu = "1";
+
+        if ( lowestLevel.equals("T") ) {
+            typRaportu = "3";
+        }
+
         String sql = "BEGIN kgp_nowe_ois.generuj (\n" +
                 "    " +  dateFrom.substring(0,4) +",\n" +
                 "    to_date('" + dateFrom +"','YYYY-MM-DD'),\n" +
@@ -66,7 +72,7 @@ public class EgeriaService {
                 "    '" + mask + "',\n" +
                 "    999, --p_knt_max_poziom      IN  NUMBER,\n" +
                 "    'B',\n" +
-                "    1,\n" +
+                "    " +typRaportu + ",\n" +
                 "    'T',\n" + // weryfikacja
                 "    'N',\n" + // pomin 0 saldo
                 "    'T',\n" + // pomin niektywne
