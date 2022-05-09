@@ -14,13 +14,13 @@ public interface EatFirmaRepo extends JpaRepository<EatFirma, BigDecimal> {
 
     Optional<EatFirma> findByFrmName(String frmName);
 
-    @Query("select f from EatFirma f where f.frmName not like '%NIZAN%'")
+    @Query("select f from EatFirma f where f.frmName not like '%NIZAN%' order by f.frmName")
     List<EatFirma> findAllForGroup();
 
-    @Query("select f from EatFirma f where f.frmId in (300000,300170,300201,300203,300202,300305,300313,300317,300319,300304,300322,300315,300303,300314)")
+    @Query("select f from EatFirma f where f.frmId in (300000,300170,300201,300203,300202,300305,300313,300317,300319,300304,300322,300315,300303,300314) order by f.frmName")
     List<EatFirma> findAllForGroupCapital();
 
-    @Query("select f from EatFirma f where f.frmId in (300000,300170,300201,300203,300202,300305,300313,300317,300319,300304,300322,300315,300303,300314)")
+    @Query("select f from EatFirma f where f.frmId in (300000,300170,300201,300203,300202,300305,300313,300317,300319,300304,300322,300315,300303,300314) order by f.frmName")
     List<EatFirma> findAll();
 
 }

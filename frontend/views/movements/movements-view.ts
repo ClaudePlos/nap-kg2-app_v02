@@ -45,7 +45,7 @@ export class MovementsView extends View  {
     async firstUpdated() {
         const companies = await CompanyEndpoint.getCompanies();
         this.companies = companies;
-        this.company = companies[35];
+        this.company = companies[0];
         this.frmId = this.company.frmId;
     }
 
@@ -99,47 +99,45 @@ export class MovementsView extends View  {
             
             <vaadin-grid .items=${this.filteredMovements} style="width: 99%; height: 88%" >
                 <vaadin-grid-column header="Firma" .renderer="${this.frmNameRenderer}" width="150px"></vaadin-grid-column>
-                <vaadin-grid-column header="Konto" .renderer="${this.accountRenderer}" width="150px"></vaadin-grid-column>
+                <vaadin-grid-column header="Konto" .renderer="${this.accountRenderer}" width="250px"></vaadin-grid-column>
                 <vaadin-grid-column header="Nazwa konta" .renderer="${this.accountNameRenderer}""  width="250px"></vaadin-grid-column>
 
-                <vaadin-grid-column header="BoWN" text-align="end" width="150px"
+                <vaadin-grid-column header="BoWN" text-align="end" width="100px"
                                     .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
                                         render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.boWn))}</span>`,root );})}"
                 ></vaadin-grid-column>
-                <vaadin-grid-column header="BoMA" text-align="end" width="150px"
+                <vaadin-grid-column header="BoMA" text-align="end" width="100px"
                                     .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
                                         render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.boMa))}</span>`,root );})}"
                 ></vaadin-grid-column>
 
                 
                 
-                <vaadin-grid-column header="obrotyWn" text-align="end" width="150px"
+                <vaadin-grid-column header="obrotyWn" text-align="end" width="100px"
                                     .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
                                         render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.obrotyWn))}</span>`,root );})}"
                 ></vaadin-grid-column>
-                <vaadin-grid-column header="obrotyMa" text-align="end" width="150px"
+                <vaadin-grid-column header="obrotyMa" text-align="end" width="100px"
                                     .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
                                         render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.obrotyMa))}</span>`,root );})}"
                 ></vaadin-grid-column>
-
-                <vaadin-grid-column header="saldoWn" text-align="end" width="150px"
-                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
-                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.saldoWn))}</span>`,root );})}"
-                ></vaadin-grid-column>
-                <vaadin-grid-column header="saldoMa" text-align="end" width="150px"
-                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
-                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.saldoMa))}</span>`,root );})}"
-                ></vaadin-grid-column>
-
                 
-                
-                <vaadin-grid-column header="obrotyWnNarPlusBO" text-align="end" width="150px"
+                <vaadin-grid-column header="obrotyWnNarPlusBO" text-align="end" width="100px"
                                     .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
                                         render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.obrotyWnNarPlusBO))}</span>`,root );})}"
                 ></vaadin-grid-column>
-                <vaadin-grid-column header="obrotyMaNarPlusBO" text-align="end" width="150px"
+                <vaadin-grid-column header="obrotyMaNarPlusBO" text-align="end" width="100px"
                                     .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
                                         render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.obrotyMaNarPlusBO))}</span>`,root );})}"
+                ></vaadin-grid-column>
+
+                <vaadin-grid-column header="saldoWn" text-align="end" width="100px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.saldoWn))}</span>`,root );})}"
+                ></vaadin-grid-column>
+                <vaadin-grid-column header="saldoMa" text-align="end" width="100px"
+                                    .renderer="${guard([], () => (root: HTMLElement,  _: HTMLElement, model: GridItemModel<MovementDTO>) => {
+                                        render(html`<span style="font-variant-numeric: tabular-nums">${this.formatAmount(Number(model.item.saldoMa))}</span>`,root );})}"
                 ></vaadin-grid-column>
                 
             </vaadin-grid>
@@ -152,8 +150,8 @@ export class MovementsView extends View  {
         } else {
             this.frmId = e.detail.value as number;
         }
-        // @ts-ignore
-        this.frmName = this.companies.find( item => item.frmId == e.detail.value ).frmName;
+        // // @ts-ignore
+        // this.frmName = this.companies.find( item => item.frmId == e.detail.value ).frmName;
     }
 
     maskChanged(e: CustomEvent) {
