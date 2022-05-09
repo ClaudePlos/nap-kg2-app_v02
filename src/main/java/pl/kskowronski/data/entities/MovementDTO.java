@@ -14,11 +14,11 @@ public class MovementDTO {
     private BigDecimal obrotyWn;
     private BigDecimal obrotyMa;
 
-    private BigDecimal saldoWn;
-    private BigDecimal saldoMa;
-
     private BigDecimal obrotyWnNarPlusBO;
     private BigDecimal obrotyMaNarPlusBO;
+
+    private BigDecimal saldoWn;
+    private BigDecimal saldoMa;
 
     public MovementDTO() {
     }

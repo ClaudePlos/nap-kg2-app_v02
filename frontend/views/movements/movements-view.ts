@@ -177,12 +177,12 @@ export class MovementsView extends View  {
         const workSheet = XLSX.utils.json_to_sheet(readyToExport);
         const now = new Date();
 
-        XLSX.utils.sheet_add_aoa(workSheet, [["Rok: " + balanceViewStore.dateFrom.substring(0,4)]], { origin: "K1" });
-        XLSX.utils.sheet_add_aoa(workSheet, [["Data generacji: " + now.toLocaleString("pl-PL")]], { origin: "K2" });
-        XLSX.utils.sheet_add_aoa(workSheet, [["Data od: " + balanceViewStore.dateFrom]], { origin: "K3" });
-        XLSX.utils.sheet_add_aoa(workSheet, [["Data do: " + balanceViewStore.dateTo]], { origin: "K4" });
-        XLSX.utils.sheet_add_aoa(workSheet, [["Firma: " + "GRUPA REKEEP"]], { origin: "K5" });
-        XLSX.utils.sheet_add_aoa(workSheet, [["Maska: " + this.mask]], { origin: "K6" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Rok: " + balanceViewStore.dateFrom.substring(0,4)]], { origin: "M1" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Data generacji: " + now.toLocaleString("pl-PL")]], { origin: "M2" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Data od: " + balanceViewStore.dateFrom]], { origin: "M3" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Data do: " + balanceViewStore.dateTo]], { origin: "M4" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Firma: " + "GRUPA REKEEP"]], { origin: "M5" });
+        XLSX.utils.sheet_add_aoa(workSheet, [["Maska: " + this.mask]], { origin: "M6" });
 
         XLSX.utils.book_append_sheet(workBook, workSheet, 'Arkusz1'); // add the worksheet to the book
 
