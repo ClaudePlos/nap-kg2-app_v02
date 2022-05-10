@@ -308,12 +308,18 @@ public class EgeriaService {
             t.setObrotyMa((BigDecimal) item[6]);
             t.setObrotyWnNarPlusBO((BigDecimal) item[7]);
             t.setObrotyMaNarPlusBO((BigDecimal) item[8]);
-            t.setSaldoWn(t.getObrotyWn().add(t.getBoWn())
-                    .subtract(t.getObrotyMa().add(t.getBoMa().add(t.getBoMa()))).compareTo(BigDecimal.ZERO) >= 0 ?
-                        t.getObrotyWn().add(t.getBoWn()).subtract(t.getObrotyMa().add(t.getBoMa())) : BigDecimal.ZERO);
-            t.setSaldoMa(t.getObrotyMa().add(t.getBoMa())
-                    .subtract(t.getObrotyWn().add(t.getBoWn())).compareTo(BigDecimal.ZERO) >= 0 ?
-                        t.getObrotyMa().add(t.getBoMa()).subtract(t.getObrotyWn().add(t.getBoMa())) : BigDecimal.ZERO);
+//            t.setSaldoWn(t.getObrotyWn().add(t.getBoWn())
+//                    .subtract(t.getObrotyMa().add(t.getBoMa().add(t.getBoMa()))).compareTo(BigDecimal.ZERO) >= 0 ?
+//                        t.getObrotyWn().add(t.getBoWn()).subtract(t.getObrotyMa().add(t.getBoMa())) : BigDecimal.ZERO);
+//            t.setSaldoMa(t.getObrotyMa().add(t.getBoMa())
+//                    .subtract(t.getObrotyWn().add(t.getBoWn())).compareTo(BigDecimal.ZERO) >= 0 ?
+//                        t.getObrotyMa().add(t.getBoMa()).subtract(t.getObrotyWn().add(t.getBoMa())) : BigDecimal.ZERO);
+            t.setSaldoWn( t.getObrotyWnNarPlusBO().subtract(t.getObrotyMaNarPlusBO()).compareTo(BigDecimal.ZERO) >= 0 ?
+                    t.getObrotyWnNarPlusBO().subtract(t.getObrotyMaNarPlusBO()) : BigDecimal.ZERO
+            );
+            t.setSaldoMa( t.getObrotyMaNarPlusBO().subtract(t.getObrotyWnNarPlusBO()).compareTo(BigDecimal.ZERO) >= 0 ?
+                    t.getObrotyMaNarPlusBO().subtract(t.getObrotyWnNarPlusBO()) : BigDecimal.ZERO
+            );
             turnoverList.add(t);
         });
 
